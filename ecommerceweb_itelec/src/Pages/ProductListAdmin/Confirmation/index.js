@@ -1,3 +1,26 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:98d71d2472e3181f1ac3f6bab80c72e9ab4ecdd59b13beaf498e2b7a1b0f6f88
-size 837
+import React from 'react';
+import './index.css'; // Optional for styling
+
+const Confirmation = ({ isOpen, onClose, onConfirm }) => {
+    if (!isOpen) return null; // Render nothing if the modal is closed
+
+    const handleConfirm = () => {
+        console.log("Confirm clicked"); // Debug log
+        onConfirm(); // Call the confirm function passed as a prop
+    };
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h2>Are you sure?</h2>
+                <p>Do you really want to delete this product?</p>
+                <div className="modal-buttons">
+                    <button onClick={onClose}>No</button>
+                    <button onClick={handleConfirm}>Yes</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Confirmation;

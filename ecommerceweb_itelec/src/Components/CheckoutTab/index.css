@@ -1,3 +1,31 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8438708311e1d0246fdc3674466e6942aadb3e56e488065fad110a5cd1f6ffee
-size 535
+.checkout-tab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ff5722;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+}
+
+.checkout-content {
+  flex: 1;
+}
+
+.checkout-button {
+  background-color: #fff;
+  color: #ff5722;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.checkout-button:hover {
+  background-color: #f1f1f1;
+}

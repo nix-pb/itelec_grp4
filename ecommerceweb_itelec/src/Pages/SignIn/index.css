@@ -1,3 +1,78 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cd66b698882b2bf3852f51d194ae85e5c7eeee0de7dadae5fad022766857bded
-size 1455
+body {
+    font-family: 'Roboto', sans-serif;
+}
+.start-page {
+    display: flex;
+    min-height: 100vh;
+}
+.left-section {
+    background-color: #1a202c;
+    color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+.logo-image {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 1rem;
+}
+.right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+.sign-in-form {
+    width: 100%;
+    max-width: 400px;
+    background-color: #f7fafc;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 0.25rem;
+}
+.btn-signin, .btn-register, .btn-switch-user {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+.btn-signin {
+    background-color: #3182ce;
+    color: white;
+}
+.btn-register {
+    background-color: #38a169;
+    color: white;
+}
+.btn-switch-user {
+    background-color: #e53e3e;
+    color: white;
+    margin-top: 1rem;
+}
+.error-message {
+    color: #e53e3e;
+    margin-bottom: 1rem;
+}

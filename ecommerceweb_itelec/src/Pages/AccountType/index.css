@@ -1,3 +1,50 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f9fe04510729a9fcac3776223bbb1b8512779af3510e8fa285470d4b2c81cfa3
-size 1213
+.account-type-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f4f4f4; /* Light gray background */
+}
+
+.account-type {
+    text-align: center;
+    background: #ffffff; /* White background for the card */
+    padding: 20px 30px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    max-width: 400px;
+    width: 90%; /* Responsive width */
+}
+
+.account-type h2 {
+    font-size: 1.8rem;
+    color: #333; /* Dark gray text */
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between buttons */
+}
+
+.buttons button {
+    flex: 1;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #ffffff; /* White text */
+    background-color: #007bff; /* Primary blue color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buttons button:hover {
+    background-color: #5ed216; /* Darker blue on hover */
+}
+
+.buttons button:active {
+    background-color: #f5850c; /* Even darker blue on click */
+}

@@ -1,3 +1,89 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1168a28584e27770b705d27c872947f383f098cbc7b1ad20d0853d1dbfc746fd
-size 1980
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+.category_title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.product-card {
+  position: relative; /* Added to allow absolute positioning for the cross button */
+  width: 300px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.3s;
+  text-align: center;
+  background-color: #fff;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+.product-image-wrapper {
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 10px 0;
+}
+
+.cross-button {
+  background-color: rgb(224, 43, 43); /* Red background */
+  color: #fff; /* White text */
+  border: none; /* No border */
+  font-size: 28px; /* Adjusted size */
+  font-weight: bold; /* Bold text for visibility */
+  cursor: pointer; /* Change cursor on hover */
+  outline: none; /* Remove outline on focus */
+  position: absolute; /* Allows positioning */
+  top: 10px; /* Position it near the top */
+  left: 10px; /* Position it on the leftmost side */
+  width: 40px; /* Narrower width */
+  height: 40px; /* Keep it proportionate */
+  border-radius: 37%; /* Make it circular */
+  display: flex; /* Center the text inside */
+  align-items: center; /* Vertically align text */
+  justify-content: center; /* Horizontally align text */
+  z-index: 1; /* Make sure the button is on top */
+}
+
+.cross-button:hover {
+  background-color: #d00; /* Darker red on hover */
+}

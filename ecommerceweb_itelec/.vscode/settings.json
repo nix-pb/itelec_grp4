@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:fb9bbb7fe2356f05dcd08269e3d6316cc9be37d8b4e0c5c40935b1a8c3c84d26
-size 458
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "local_db",
+            "database": "rentatool_database",
+            "username": "root"
+        }
+    ],
+    "liveServer.settings.port": 5501
+}

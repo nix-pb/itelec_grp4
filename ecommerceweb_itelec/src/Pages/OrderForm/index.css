@@ -1,3 +1,96 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:a4360bea54a4c177a5bca72671e424707ccf5bea56a93cb06a2846ffc6545bda
-size 1463
+.order-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border: 2px solid orange;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.order-form h2 {
+  text-align: center;
+  color: orange;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+
+.order-form p {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+
+.order-form label {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+}
+
+
+.order-form input[type="number"],
+.order-form input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+
+.order-form button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.2rem;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.order-form button:hover {
+  background-color: rgb(255, 208, 0);
+  color: black;
+}
+
+
+.order-form input:focus, 
+.order-form button:focus {
+  outline: 3px solid orange;
+  outline-offset: 2px;
+}
+
+
+@media (max-width: 600px) {
+  .order-form {
+    padding: 10px;
+  }
+
+  .order-form h2 {
+    font-size: 1.5rem;
+  }
+
+  .order-form button {
+    font-size: 1rem;
+  }
+}
+
+
+.product-image-container {
+  max-width: 300px; /* You can adjust this based on your design */
+  margin-bottom: 20px;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}

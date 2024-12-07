@@ -1,3 +1,24 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:63dc2e2b79f9995b97213da9db10c427a84e9cb89cbd088a9259ee5af684f227
-size 375
+.image-dropbox {
+    border: 2px dashed #007bff;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.image-dropbox p {
+    margin: 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.image-preview {
+    margin-top: 15px;
+}
+
+.image-preview img {
+    max-width: 100%; 
+    height: auto;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+}

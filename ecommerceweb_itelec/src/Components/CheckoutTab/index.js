@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:362be0d00faff67acd1aade559b055195eb00002d182d00d0b242a46ba2178d4
-size 350
+// CheckoutTab.js
+import React from 'react';
+import './index.css'; 
+
+
+const CheckoutTab = () => {
+  return (
+    <div className="checkout-tab">
+      <div className="checkout-content">
+        <span>Your Total: PHP 0.00</span> 
+      </div>
+      <button className="checkout-button">Check Out</button>
+    </div>
+  );
+};
+
+export default CheckoutTab;

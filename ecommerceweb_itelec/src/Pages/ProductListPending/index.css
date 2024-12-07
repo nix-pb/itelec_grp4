@@ -1,3 +1,142 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:44949b9023dcdb71dfe7d32887d0913f44587fcf08c0fa13d5d5544935838120
-size 1841
+.product-list-container-order {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.product-list-order {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-order {
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr 0.5fr;
+  gap: 4px;
+  align-items: center;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 3px 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  height: auto;
+  background-color: #fff;
+}
+
+.product-card-order:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-wrapper-order {
+  display: flex; 
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.product-image-order {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin-left: 0;
+}
+
+.product-info-order {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-name-order {
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
+.product-description-order {
+  font-size: 0.65em;
+  color: #666;
+}
+
+.product-price-order {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: right;
+  color: #ff8800;
+}
+
+.ratings-container-order {
+  display: flex;
+  margin-top: 8px;
+}
+
+.star {
+  font-size: 45px;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  margin-right: 25px;
+}
+
+.star:hover {
+  color: #ffcc00;
+}
+
+.star.active {
+  color: #ffcc00;
+}
+
+.buy-again-button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #ff8800;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.buy-again-button:hover {
+  background-color: #e07800;
+}
+
+.order-status {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.product-status-order {
+  font-size: 14px;
+  color: #777;
+  margin-top: 8px;
+}
+
+
+.cancel-button {
+  background-color: #e53935;
+  color: white; 
+  border: none;
+  padding: 10px 16px; 
+  cursor: pointer;
+  border-radius: 6px; 
+  font-size: 14px; 
+  font-weight: bold;
+  transition: background-color 0.3s ease; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+  margin-bottom: 10px;
+}
+
+.cancel-button:hover {
+  background-color: #b71c1c;
+}
+
+.cancel-button:active {
+  background-color: #8e0000; 
+  box-shadow: none;
+}

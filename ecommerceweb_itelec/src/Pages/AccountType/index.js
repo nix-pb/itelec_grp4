@@ -1,3 +1,29 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:dbf4e5a6cc9fa7ce0824470a4bb76476c9ac99abd8d13acebb7106cdc06cc4ad
-size 768
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './index.css'; 
+
+const AccountType = () => {
+    const navigate = useNavigate();
+
+    const handleBuyerRegister = () => {
+        navigate('/BuyerRegister');
+    };
+
+    const handleSellerRegister = () => {
+        navigate('/SellerRegister');
+    };
+
+    return (
+        <div className="account-type-wrapper">
+            <div className="account-type">
+                <h2>Select Account Type</h2>
+                <div className="buttons">
+                    <button onClick={handleBuyerRegister}>Buyer</button>
+                    <button onClick={handleSellerRegister}>Seller</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default AccountType;

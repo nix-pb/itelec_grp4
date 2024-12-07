@@ -1,3 +1,87 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f2f1cdd7a3b07c79700f0787ef64dd6d07056b9c3b915d6f7b23781b6c357fd5
-size 1587
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ProductListPending from '../ProductListPending';
+import ProductListInTransit from '../ProductListInTransit';
+import ProductListRateNow from '../ProductListRateNow';
+import ProductListReceived from '../ProductListReceived';
+import Header from '../Header';
+
+const Orders = () => {
+    const navigate = useNavigate();
+
+    const [orderStatus, setOrderStatus] = useState("Pending");
+
+    return (
+        <>
+            <Header />
+
+            {/* Buttons to filter order status */}
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginBottom: "20px",
+                    marginTop: "20px",
+                    gap: "10px", // Adds space between buttons
+                }}
+            >
+                <button
+                    onClick={() => setOrderStatus("Pending")}
+                    style={{
+                        padding: "10px",
+                        backgroundColor: orderStatus === "Pending" ? "#192B44" : "#f0f0f0",
+                        color: orderStatus === "Pending" ? "#fff" : "#000",
+                        border: "1px solid #ccc",
+                        cursor: "pointer",
+                    }}
+                >
+                    Pending
+                </button>
+                <button
+                    onClick={() => setOrderStatus("In Transit")}
+                    style={{
+                        padding: "10px",
+                        backgroundColor: orderStatus === "In Transit" ? "#192B44" : "#f0f0f0",
+                        color: orderStatus === "In Transit" ? "#fff" : "#000",
+                        border: "1px solid #ccc",
+                        cursor: "pointer",
+                    }}
+                >
+                    In Transit
+                </button>
+                <button
+                    onClick={() => setOrderStatus("Rate Now")}
+                    style={{
+                        padding: "10px",
+                        backgroundColor: orderStatus === "Rate Now" ? "#192B44" : "#f0f0f0",
+                        color: orderStatus === "Rate Now" ? "#fff" : "#000",
+                        border: "1px solid #ccc",
+                        cursor: "pointer",
+                    }}
+                >
+                    Rate Now
+                </button>
+                <button
+                    onClick={() => setOrderStatus("Received")}
+                    style={{
+                        padding: "10px",
+                        backgroundColor: orderStatus === "Received" ? "#192B44" : "#f0f0f0",
+                        color: orderStatus === "Received" ? "#fff" : "#000",
+                        border: "1px solid #ccc",
+                        cursor: "pointer",
+                    }}
+                >
+                    Received
+                </button>
+            </div>
+
+            {/* Render the respective component based on order status */}
+            {orderStatus === "Pending" && <ProductListPending />}
+            {orderStatus === "In Transit" && <ProductListInTransit />}
+            {orderStatus === "Rate Now" && <ProductListRateNow />}
+            {orderStatus === "Received" && <ProductListReceived />}
+        </>
+    );
+};
+
+export default Orders;

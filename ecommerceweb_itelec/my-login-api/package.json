@@ -1,3 +1,12 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:04e58fee4734ab362e6438001bffb35bda45ceaeb9d936767d53aab04cfef7b4
-size 226
+{
+  "name": "my-login-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
