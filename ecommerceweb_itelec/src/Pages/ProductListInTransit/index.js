@@ -13,6 +13,12 @@ const ProductListInTransit = () => {
     navigate(`/product/${id}`); // Navigate to the specific product detail page
   };
 
+  // Handle Buy Again button click, navigate to the product page using product_id
+  const handleBuyAgain = (productId, event) => {
+    event.stopPropagation(); // Prevent the card's onClick from being triggered
+    navigate(`/product/${productId}`); // Navigate to the product page
+  };
+
   const handleMarkAsReceived = async (orderId) => {
     try {
       const response = await fetch('http://localhost:5001/api/mark-order-ratenow', {
@@ -37,7 +43,6 @@ const ProductListInTransit = () => {
       alert('Failed to update order status. Please try again.');
     }
   };
-  
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -79,7 +84,7 @@ const ProductListInTransit = () => {
             <div
               key={order.id}
               className="product-card-order"
-              onClick={() => handleProductClick(order.id)}
+              onClick={() => handleProductClick(order.id)} // Navigate to product page on card click
             >
               <div className="product-image-wrapper-order">
                 {order.image ? (
@@ -103,7 +108,12 @@ const ProductListInTransit = () => {
                   Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
                 </p>
                 <div className="product-actions">
-                  <button className="buy-again-button">Buy Again</button>
+                  <button
+                    className="buy-again-button"
+                    onClick={(e) => handleBuyAgain(order.product_id, e)} // Use product_id for Buy Again, stop event propagation
+                  >
+                    Buy Again
+                  </button>
                   {order.status === 'In Transit' && (
                     <button
                       className="received-button"

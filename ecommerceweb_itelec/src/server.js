@@ -1122,6 +1122,66 @@ app.post('/api/orders/:orderId/rate', (req, res) => {
 });
 
 
+// Ensure this API route is correctly set up
+app.get('/api/shops/:seller_id', (req, res) => {
+  const { seller_id } = req.params;
+
+  if (!seller_id) {
+    return res.status(400).json({ message: 'Seller ID is required.' });
+  }
+
+  const fetchShopDetailsSql = `
+    SELECT id, username, description, seller_id, average_rating, rating_count
+    FROM shops
+    WHERE seller_id = ?
+  `;
+
+  connection.query(fetchShopDetailsSql, [seller_id], (err, shopResult) => {
+    if (err) {
+      console.error('Error fetching shop details:', err);
+      return res.status(500).json({ message: 'Database error fetching shop details.' });
+    }
+
+    if (shopResult.length === 0) {
+      return res.status(404).json({ message: 'Shop not found.' });
+    }
+
+    const shop = shopResult[0];
+    // Ensure fields are explicitly defined, even if null
+    const response = {
+      id: shop.id || null,
+      username: shop.username || null,
+      description: shop.description || null,
+      seller_id: shop.seller_id || null,
+      average_rating: shop.average_rating || null,
+      rating_count: shop.rating_count || null,
+    };
+    res.status(200).json(response);
+  });
+});
+
+
+
+// API endpoint to fetch products for a specific seller_id
+app.get('/api/productsshop', (req, res) => {
+  const { seller_id } = req.query;
+  console.log('Received seller_id:', seller_id);  // Log the seller_id to check if it's correct
+
+  if (!seller_id) {
+    return res.status(400).json({ error: 'seller_id is required' });
+  }
+
+  // Filter products based on seller_id
+  const sellerProducts = products.filter(product => product.seller_id === seller_id);
+
+  if (sellerProducts.length === 0) {
+    return res.status(404).json({ message: 'No products found for this seller' });
+  }
+
+  res.json(sellerProducts);
+});
+
+
 
 
 
@@ -1133,3 +1193,4 @@ app.post('/api/orders/:orderId/rate', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
