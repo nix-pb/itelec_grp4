@@ -10,6 +10,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isInCart, setIsInCart] = useState(false); // State to check if the product is in the cart
   const navigate = useNavigate();
 
   // Navigate to Order Form with product details
@@ -84,12 +85,40 @@ const ProductDetails = () => {
       const data = await response.json();
       console.log('Product added to cart successfully:', data);
       toast.success('Product added to cart successfully');  // Display success message
+
+      // Navigate to /cartlist after adding the product to the cart
+      navigate('/cartlist');
     } catch (error) {
       console.error('Error adding product to cart:', error);
       toast.error(`There was an issue adding the product to your cart. ${error.message}`);  // Error message if the request fails
     }
   };
+
+  // Fetch the user's cart and check if the product is already in it
+  const checkIfInCart = async () => {
+    const userId = localStorage.getItem('user_id');
+    if (!userId || !product) return;
   
+    try {
+      // Send a POST request with user_id and product_id in the request body
+      const response = await fetch('http://localhost:5001/api/cart/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id: userId, product_id: product.id }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to check cart');
+      }
+  
+      const data = await response.json();
+      setIsInCart(data.isInCart); // True if product is in the cart, false otherwise
+    } catch (error) {
+      console.error('Error checking cart:', error);
+    }
+  };
 
   // Navigate to the shop page of the product seller
   const goToShop = () => {
@@ -125,6 +154,13 @@ const ProductDetails = () => {
     fetchProductDetails();
   }, [id]);
 
+  // Check if product is in the cart when product details are loaded
+  useEffect(() => {
+    if (product) {
+      checkIfInCart();
+    }
+  }, [product]);
+
   // Display loading state
   if (loading) {
     return <div>Loading...</div>;
@@ -143,11 +179,6 @@ const ProductDetails = () => {
           <button className="icon-button" onClick={goToShop} title="Shop">
             <FaStore size={24} /> View Shop
           </button>
-          {/* 
-          <button className="icon-button" onClick={goToChat} title="Chat">
-            <FaComments size={24} /> Chat Seller
-          </button>
-          */}
         </div>
 
         <h2>{product.name}</h2>
@@ -168,7 +199,15 @@ const ProductDetails = () => {
         <div className="rowrent">
           <button className="rent-button" onClick={goToOrderForm}>Rent now</button>
           
-          <button className="add-to-cart-button" onClick={addToCart}>Add to cart</button>
+          <button 
+            className="add-to-cart-button" 
+            onClick={addToCart} 
+            disabled={isInCart} 
+            style={{ backgroundColor: isInCart ? 'grey' : '' }}
+          >
+            Add to cart
+          </button>
+
         </div>
       </div>
     </>

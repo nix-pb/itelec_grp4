@@ -1321,6 +1321,63 @@ app.post('/api/buy', (req, res) => {
     });
 });
 
+
+// Endpoint to remove a product from the cart
+app.delete('/api/cartlistremove', (req, res) => {
+  const { user_id, product_id } = req.body;
+  
+  if (!user_id || !product_id) {
+    return res.status(400).json({ message: 'User ID and Product ID are required.' });
+  }
+
+  const sql = 'DELETE FROM cartlist WHERE user_id = ? AND product_id = ?';
+  console.log('Running query:', sql, 'With values:', [user_id, product_id]); // Log the query and params
+  connection.query(sql, [user_id, product_id], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Internal server error.', error: err.message });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Product not found in the cart.' });
+    }
+
+    return res.status(200).json({ message: 'Product removed from the cart.' });
+  });
+});
+
+
+// POST endpoint to check if product is in the cartlist
+router.post('/api/cart/check', async (req, res) => {
+  const { user_id, product_id } = req.body;
+
+  if (!user_id || !product_id) {
+    return res.status(400).json({ message: 'User ID and Product ID are required.' });
+  }
+
+  try {
+    // Query the cartlist table to check if the product already exists
+    const result = await db.query(
+      'SELECT * FROM cartlist WHERE user_id = $1 AND product_id = $2',
+      [user_id, product_id]
+    );
+
+    if (result.rows.length > 0) {
+      return res.json({ isInCart: true });
+    } else {
+      return res.json({ isInCart: false });
+    }
+  } catch (error) {
+    console.error('Error checking cart:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -4,6 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Cartlist.css';
 import Header from '../Header';
+import Confirmation from './Confirmation/index'; // Assuming this is the confirmation modal
 
 function Cartlist() {
   const navigate = useNavigate();
@@ -11,10 +12,13 @@ function Cartlist() {
   const [selectedProducts, setSelectedProducts] = useState({});
   const [selectedDates, setSelectedDates] = useState({});
   const [locationInput, setLocationInput] = useState(''); // Location input state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   // Get user ID from localStorage
   const userId = localStorage.getItem('user_id');
 
+  // Fetch products from the server
   useEffect(() => {
     const fetchProducts = async () => {
       if (!userId) {
@@ -27,14 +31,13 @@ function Cartlist() {
         
         if (!response.ok) {
           const errorData = await response.json();
-          toast.error(errorData.message || 'Failed to fetch products.');
           throw new Error(errorData.message || 'Failed to fetch products.');
         }
 
         const data = await response.json();
         setProducts(data);
       } catch (error) {
-        toast.error(error.message); 
+        toast.error(error.message);
       }
     };
 
@@ -48,7 +51,7 @@ function Cartlist() {
   const handleQuantityChange = (productId, change) => {
     setProducts((prevProducts) =>
       prevProducts.map((product) => {
-        if (product.id === productId) {
+        if (product.product_id === productId) {
           const newQuantity = Math.max(product.quantity + change, 0);
           return { ...product, quantity: newQuantity };
         }
@@ -75,71 +78,100 @@ function Cartlist() {
     setLocationInput(e.target.value); // Update location state
   };
 
-  const removeProduct = (id) => {
-    setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
+  // Open delete modal for a cart item
+  const openDeleteModal = (id) => {
+    setProductToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  // Close delete modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setProductToDelete(null);
+  };
+
+  // Handle deletion of a cart item
+  const handleDeleteProduct = async (productId) => {
+    console.log('Deleting product with ID:', productId, 'User ID:', userId); // Log the values to check
+    try {
+      const response = await fetch('http://localhost:5001/api/cartlistremove', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userId, product_id: productId }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        toast.error("Failed to delete product: " + data.message);
+        return;
+      }
+
+  
+      setProducts((prevProducts) => prevProducts.filter((product) => product.product_id !== productId));
+      closeModal();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('Error deleting product');
+    }
   };
 
   const subtotal = products
-    .filter((product) => selectedProducts[product.id])
+    .filter((product) => selectedProducts[product.product_id])
     .reduce((total, product) => total + product.price * product.quantity, 0);
 
-    const proceedToCheckout = async () => {
-      // Get the selected products from the cart
-      const selectedItems = products.filter(product => selectedProducts[product.id]);
-    
-      if (selectedItems.length === 0) {
-        toast.error('No products selected for checkout.');
-        return;
-      }
-    
-      if (!locationInput) {
-        toast.error('Please provide a delivery address.');
-        return;
-      }
-    
-      // Prepare the order data to send to the backend
-      const orderData = selectedItems.map(product => {
-        // Use the selected date or fallback to current date if none is selected
-        const purchaseDate = selectedDates[product.id] || new Date().toISOString().slice(0, 19).replace('T', ' ');
-    
-        return {
-          user_id: userId,
-          product_id: product.id,
-          name: product.name,
-          price: product.price,
-          quantity: product.quantity,
-          purchase_date: purchaseDate, // Use selected date here
-          image: product.image,
-          seller_id: product.seller_id,  // Ensure this is included
-          selected_date: selectedDates[product.id] || null,
-          location: locationInput, // Include the location in the order data
-        };
+  const proceedToCheckout = async () => {
+    const selectedItems = products.filter((product) => selectedProducts[product.product_id]);
+  
+    if (selectedItems.length === 0) {
+      toast.error('No products selected for checkout.');
+      return;
+    }
+  
+    if (!locationInput) {
+      toast.error('Please provide a delivery address.');
+      return;
+    }
+  
+    const orderData = selectedItems.map((product) => {
+      const purchaseDate = selectedDates[product.product_id] || new Date().toISOString().slice(0, 19).replace('T', ' ');
+  
+      return {
+        user_id: userId,
+        product_id: product.product_id,
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity,
+        purchase_date: purchaseDate,
+        image: product.image,
+        seller_id: product.seller_id,
+        selected_date: selectedDates[product.product_id] || null,
+        location: locationInput,
+      };
+    });
+  
+    console.log('Order data being sent:', orderData);
+  
+    try {
+      const response = await fetch('http://localhost:5001/api/buy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
       });
-    
-      console.log('Order data being sent:', orderData);
-    
-      try {
-        const response = await fetch('http://localhost:5001/api/buy', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(orderData),
-        });
-    
-        const data = await response.json();
-    
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to place order');
-        }
-    
-        toast.success('Order placed successfully!');
-        // No redirect; only display success message
-      } catch (error) {
-        toast.error(error.message || 'An error occurred while placing the order');
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to place order');
       }
-    };
-    
+  
+      toast.success('Order placed successfully!');
+    } catch (error) {
+      toast.error(error.message || 'An error occurred while placing the order');
+    }
+  };
 
   return (
     <>
@@ -155,22 +187,20 @@ function Cartlist() {
             {products.map((product) => (
               <div
                 className="product-item"
-                key={product.id}
-                id={product.id}
+                key={product.product_id} // Use product.product_id
                 onClick={(e) => {
-                  // Prevent redirect if clicked on the date picker or its related area
                   if (!e.target.closest('.date-picker') && !e.target.closest('.checkbox-column')) {
-                    handleProductClick(product.id);
+                    handleProductClick(product.product_id); // Use product.product_id
                   }
                 }}
               >
                 <div className="checkbox-column">
                   <input
                     type="checkbox"
-                    checked={!!selectedProducts[product.id]}
-                    onChange={() => handleCheckboxChange(product.id)}
+                    checked={!!selectedProducts[product.product_id]} // Use product.product_id
+                    onChange={() => handleCheckboxChange(product.product_id)} // Use product.product_id
                   />
-                  <label htmlFor={`checkbox-${product.id}`} className="custom-checkbox"></label>
+                  <label htmlFor={`checkbox-${product.product_id}`} className="custom-checkbox"></label>
                 </div>
 
                 <div className="product-image-wrapper-cart">
@@ -188,7 +218,6 @@ function Cartlist() {
                 <div className="product-info-cart">
                   <h3>{product.name}</h3>
                   <p className="product-price-cart">PHP {product.price}</p>
-                  {/* Display seller_id */}
                   <p className="product-seller-id">Seller ID: {product.seller_id}</p>
                 </div>
 
@@ -196,7 +225,7 @@ function Cartlist() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleQuantityChange(product.id, -1);
+                      handleQuantityChange(product.product_id, -1); // Use product.product_id
                     }}
                     className="quantity-button"
                     disabled={product.quantity === 0}
@@ -207,7 +236,7 @@ function Cartlist() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleQuantityChange(product.id, 1);
+                      handleQuantityChange(product.product_id, 1); // Use product.product_id
                     }}
                     className="quantity-button"
                   >
@@ -216,18 +245,25 @@ function Cartlist() {
                 </div>
 
                 <div className="date-picker">
-                  <label htmlFor={`date-picker-${product.id}`}>Select Date:</label>
+                  <label htmlFor={`date-picker-${product.product_id}`}>Select Date:</label>
                   <input
                     type="date"
-                    id={`date-picker-${product.id}`}
-                    value={selectedDates[product.id] || ''}
-                    onChange={(e) => handleDateChange(product.id, e.target.value)}
+                    id={`date-picker-${product.product_id}`}
+                    value={selectedDates[product.product_id] || ''}
+                    onChange={(e) => handleDateChange(product.product_id, e.target.value)} // Use product.product_id
                   />
                 </div>
 
-                <button className="remove-button" onClick={(e) => removeProduct(product.id)}>
+                <button
+                  className="remove-button"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering other click handlers
+                    openDeleteModal(product.product_id); // Use product.product_id
+                  }}
+                >
                   Remove
                 </button>
+
               </div>
             ))}
           </div>
@@ -258,6 +294,17 @@ function Cartlist() {
           </div>
         </div>
       </div>
+
+      {/* Confirmation Modal */}
+      <Confirmation
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={() => {
+          if (productToDelete) {
+            handleDeleteProduct(productToDelete);
+          }
+        }}
+      />
     </>
   );
 }
