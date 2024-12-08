@@ -6,6 +6,7 @@ import './index.css';
 import Header from '../Header';
 import { useNavigate } from 'react-router-dom';
 import ModalComponent from '../../Components/ModalComponent';
+import HeaderBack from "../../Components/HeaderBack";
 
 const AdminAddProduct = () => {
     const [product, setProduct] = useState({
@@ -107,7 +108,7 @@ const AdminAddProduct = () => {
 
     return (
         <div>
-            <Header />
+            <HeaderBack />
             <ModalComponent />
             <div className="admin-dashboard">
                 <h2>Admin Dashboard - Add New Product</h2>

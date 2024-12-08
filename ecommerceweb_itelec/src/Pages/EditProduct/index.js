@@ -4,6 +4,7 @@ import ImageDropBox from './ImageDropBox';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './EditProduct.css';
+import HeaderBack from "../../Components/HeaderBack";
 
 const EditProduct = () => {
     const navigate = useNavigate();
@@ -114,6 +115,8 @@ const EditProduct = () => {
     }
 
     return (
+        <>
+        <HeaderBack/>
         <div className="admin-dashboard">
             <h2>Edit Product</h2>
             <form onSubmit={handleFormSubmit}>
@@ -212,6 +215,7 @@ const EditProduct = () => {
             </form>
             <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
         </div>
+        </>
     );
 };
 

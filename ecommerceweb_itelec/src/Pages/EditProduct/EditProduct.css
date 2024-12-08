@@ -6,23 +6,9 @@ body {
     background-color: #f0f0f0;
 }
 
-.admin-dashboard {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 30px;
-    background: linear-gradient(135deg, #ffffff, #f9f9f9);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    border: 3px solid #ffa500;
-}
-
 form {
     display: flex;
     flex-direction: column;
-}
-
-.form-group {
-    margin-bottom: 25px;
 }
 
 label {
@@ -116,6 +102,16 @@ h2 {
     margin-bottom: 20px;
     letter-spacing: 1.5px;
     font-family: 'Arial', sans-serif;
+}
+
+.admin-dashboard {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #ffffff, #f9f9f9);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border: 3px solid #ffa500;
 }
 
 .admin-dashboard {

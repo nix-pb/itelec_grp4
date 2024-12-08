@@ -1,19 +1,26 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const HeaderAdmin = () => {
+const HeaderBack = () => {
     const navigate = useNavigate();
+
+    const handleBack = () => {
+        navigate(-1); 
+    };
 
     const goToAccountProfile = () => {
         navigate("/AccountProfile");
+    };
+
+    const goToCart = () => {
+        navigate("/Cartlist");
     };
 
     // Updated Icon Component
     const Icon = ({ name, color }) => {
         const icons = {
             profile: <i className="fas fa-user text-2xl" style={{ color }}></i>,
-            orders: <i className="fas fa-box text-2xl" style={{ color }}></i>,
-            cart: <i className="fas fa-shopping-cart text-2xl" style={{ color }}></i>,
+            cart: <i className="fas fa-shopping-cart text-2xl" style={{ color }}></i>, 
         };
         return icons[name] || null;
     };
@@ -24,7 +31,7 @@ const HeaderAdmin = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "100%",
-                backgroundColor: "#1e3a8a",
+                backgroundColor: "#1e3a8a", 
                 color: "white",
             }}
         >
@@ -39,6 +46,28 @@ const HeaderAdmin = () => {
                     height: "70px",
                 }}
             >
+                {/* Left Section */}
+                <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
+                    <button
+                        onClick={handleBack}
+                        style={{
+                            backgroundColor: "#E8982D", 
+                            color: "white",
+                            border: "none",
+                            padding: "10px",
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                            width: "40px",
+                            height: "40px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <span style={{ fontSize: "20px" }}>&#8592;</span>
+                    </button>
+                </div>
+
                 {/* Center Section - Logo */}
                 <div
                     style={{
@@ -50,6 +79,7 @@ const HeaderAdmin = () => {
                     }}
                 >
                     <Link
+                        to="/Home"
                         style={{
                             display: "flex",
                             alignItems: "center",
@@ -76,10 +106,13 @@ const HeaderAdmin = () => {
                         gap: "30px",
                     }}
                 >
+                    
+
+                    {/* Profile Button */}
                     <button
                         onClick={goToAccountProfile}
                         style={{
-                            backgroundColor: "#E8982D",
+                            backgroundColor: "#E8982D", 
                             border: "none",
                             padding: "10px",
                             borderRadius: "50%",
@@ -99,4 +132,4 @@ const HeaderAdmin = () => {
     );
 };
 
-export default HeaderAdmin;
+export default HeaderBack;
