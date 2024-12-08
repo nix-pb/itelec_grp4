@@ -158,6 +158,7 @@ td {
 .orders-container {
     margin: 20px;
     padding: 10px;
+    background-color: #dce3fa;
 }
 
 .orders-container table {
@@ -170,11 +171,11 @@ td {
 .orders-container th, .orders-container td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #918585;
 }
 
 .orders-container th {
-    background-color: #f4f4f4;
+    background-color: #9eb2f5;
     color: #333;
 }
 
@@ -221,4 +222,103 @@ td {
 
 .add-product-button:hover {
     background-color: #45a049;
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  width: 10%;
+  padding: 8px 12px; /* Reduced width */
+  margin: 0 5px;
+  cursor: pointer;
+  background-color: orange; /* Set background to orange */
+  border: 1px solid orange; /* Border to match button color */
+  border-radius: 15px; /* Rounded corners */
+  color: white; /* Text color white */
+  font-weight: bold;
+  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.pagination button:hover {
+  background-color: #ff8c00; /* Darker orange on hover */
+  border-color: #ff8c00; /* Darker border color on hover */
+}
+
+.pagination button.active {
+  background-color: #a06318; /* Active button color */
+  border-color: #ff8c00; /* Active button border */
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  background-color: #756b6b; /* Light gray background when disabled */
+  border-color: #ccc; /* Light gray border when disabled */
+}
+
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+}
+
+.modal button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
+
+
+/* Style for the Seller Dashboard heading */
+.seller-dashboard-heading {
+  font-size: 3rem; /* Large font size for prominence */
+  font-weight: 800; /* Very bold text */
+  color: #333; /* Dark text color for contrast */
+  padding: 15px 20px; /* Add padding for spacing around the text */
+  margin-top: 20px; /* Space above */
+  margin-bottom: 20px; /* Space below */
+  text-align: center; /* Center align */
+  font-family: 'Montserrat', sans-serif; /* Modern sans-serif font */
+  letter-spacing: 1.5px; /* Slightly increase letter-spacing for elegance */
+  text-transform: uppercase; /* Uppercase text for a professional look */
+  
+  /* Adding depth to the text */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0px 0px 25px rgba(0, 0, 0, 0.1); /* Depth effect for text */
+}
+
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  .seller-dashboard-heading {
+      font-size: 2.5rem; /* Slightly smaller font size on mobile */
+      padding: 12px 18px; /* Adjust padding for smaller screens */
+  }
 }

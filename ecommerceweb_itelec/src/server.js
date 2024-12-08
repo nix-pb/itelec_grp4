@@ -850,9 +850,9 @@ app.get('/api/orders_received', (req, res) => {
 
 
 
-// Fetch orders for a specific seller, sorted by purchase_date
 app.get('/api/ordersadmin', (req, res) => {
   const userId = req.query.seller_id;  // Get seller_id from query parameters
+  const sortOrder = req.query.sort_order || 'ASC';  // Default is 'ASC' for oldest first
 
   // If no seller_id is provided, return a bad request response
   if (!userId) {
@@ -860,10 +860,10 @@ app.get('/api/ordersadmin', (req, res) => {
   }
 
   const sql = `
-    SELECT id, product_id, user_id, name, price, quantity, purchase_date, image, status
+    SELECT id, product_id, user_id, name, price, quantity, purchase_date, image, status, location
     FROM orders
     WHERE seller_id = ?
-    ORDER BY purchase_date DESC
+    ORDER BY purchase_date ${sortOrder}  -- Use dynamic sort order
   `;
 
   connection.query(sql, [userId], (error, results) => {
@@ -875,6 +875,8 @@ app.get('/api/ordersadmin', (req, res) => {
     res.status(200).json(results);
   });
 });
+
+
 
 // API to update the order status to "Received"
 app.put('/api/mark-order-ratenow', (req, res) => {
@@ -1347,31 +1349,6 @@ app.delete('/api/cartlistremove', (req, res) => {
 });
 
 
-// POST endpoint to check if product is in the cartlist
-router.post('/api/cart/check', async (req, res) => {
-  const { user_id, product_id } = req.body;
-
-  if (!user_id || !product_id) {
-    return res.status(400).json({ message: 'User ID and Product ID are required.' });
-  }
-
-  try {
-    // Query the cartlist table to check if the product already exists
-    const result = await db.query(
-      'SELECT * FROM cartlist WHERE user_id = $1 AND product_id = $2',
-      [user_id, product_id]
-    );
-
-    if (result.rows.length > 0) {
-      return res.json({ isInCart: true });
-    } else {
-      return res.json({ isInCart: false });
-    }
-  } catch (error) {
-    console.error('Error checking cart:', error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
-});
 
 
 
