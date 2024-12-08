@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ onSearch }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleBack = () => {
-        navigate(-1); // Go back to the previous page
+        navigate(-1); 
     };
 
     const goToAccountProfile = () => {
@@ -53,18 +53,17 @@ const Header = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "100%",
-                backgroundColor: "#1e3a8a", // Dark blue
+                backgroundColor: "#1e3a8a",
                 color: "white",
             }}
         >
-            {/* Top Header Section */}
             <header
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "10px",
-                    backgroundColor: "#192B44", // Blue
+                    backgroundColor: "#192B44",
                     height: "70px",
                 }}
             >
@@ -73,7 +72,7 @@ const Header = () => {
                     <button
                         onClick={handleBack}
                         style={{
-                            backgroundColor: "#E8982D", // Orange
+                            backgroundColor: "#E8982D", 
                             color: "white",
                             border: "none",
                             padding: "10px",
@@ -150,10 +149,11 @@ const Header = () => {
                                 width: "160px",
                                 height: "100%",
                             }}
+                            onChange={onSearch} // Call the onSearch prop to update the search term
                         />
                         <button
                             style={{
-                                backgroundColor: "#E8982D", // Orange
+                                backgroundColor: "#E8982D", 
                                 border: "none",
                                 padding: "10px",
                                 borderRadius: "0 20px 20px 0",
@@ -171,7 +171,7 @@ const Header = () => {
                     <button
                         onClick={goToAccountProfile}
                         style={{
-                            backgroundColor: "#E8982D", // Orange
+                            backgroundColor: "#E8982D", 
                             border: "none",
                             padding: "10px",
                             borderRadius: "50%",
@@ -193,7 +193,7 @@ const Header = () => {
                 style={{
                     display: "flex",
                     justifyContent: "flex-end",
-                    backgroundColor: "#C1460E", // Red
+                    backgroundColor: "#C1460E", 
                     padding: "10px",
                     alignItems: "center",
                     height: "60px",

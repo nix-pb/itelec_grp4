@@ -106,7 +106,7 @@ const OrderForm = () => {
       }
   
       toast.success("Your order has been processed successfully!");
-      setTimeout(() => navigate('/home'), 3000);
+      setTimeout(() => navigate('/Orders'), 1500);
     } catch (error) {
       console.error('Error placing order:', error);
       toast.error("There was an issue placing your order. Please try again later.");

@@ -12,11 +12,11 @@ const ProductListAdmin = ({ selectedCategory }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
 
-    // Get the userId from localStorage
+    
     const userId = localStorage.getItem('user_id');
 
     useEffect(() => {
-        console.log('Fetched userId:', userId); // Log userId for debugging
+        console.log('Fetched userId:', userId); 
         if (!userId) {
             console.error('No userId found in localStorage');
         }
@@ -65,7 +65,7 @@ const ProductListAdmin = ({ selectedCategory }) => {
     // Function to delete the product
     const handleDeleteProduct = async (id) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/user-products/${id}`, {
+            const response = await fetch(`http://localhost:5001/api/product-delete/${id}`, {
                 method: 'DELETE',
             });
 
@@ -75,19 +75,19 @@ const ProductListAdmin = ({ selectedCategory }) => {
                 return;
             }
 
-            const data = await response.json(); // Parse the success message
-            toast.success(data.message); // Show success message as a toast
+            const data = await response.json();
+            toast.success(data.message); 
 
             // Remove the product from the local state
             setProducts((prevProducts) => prevProducts.filter(product => product.id !== id));
-            closeModal(); // Close the modal after deletion
+            closeModal(); 
         } catch (error) {
             console.error('Error deleting product:', error);
-            toast.error('Error deleting product'); // Show error message as a toast
+            toast.error('Error deleting product'); 
         }
     };
 
-    // Filter products based on category if selected
+    
     const filteredProducts = selectedCategory
         ? products.filter(product => product.category === selectedCategory)
         : products;
@@ -95,7 +95,7 @@ const ProductListAdmin = ({ selectedCategory }) => {
     return (
         <div>
             <div className='category_title'></div>
-            <div className="product-list">
+            <div className="product-list-admin">
                 {loading ? (
                     <p>Loading products...</p>
                 ) : filteredProducts.length === 0 ? (
@@ -110,8 +110,8 @@ const ProductListAdmin = ({ selectedCategory }) => {
                             <button 
                                 className="cross-button" 
                                 onClick={(e) => {
-                                    e.stopPropagation(); // Prevent triggering product click
-                                    openDeleteModal(product.id); // Open the delete modal
+                                    e.stopPropagation(); 
+                                    openDeleteModal(product.id); 
                                 }} 
                             >
                                 ×
@@ -134,18 +134,18 @@ const ProductListAdmin = ({ selectedCategory }) => {
                 )}
             </div>
 
-            {/* Render the confirmation modal */}
+           
             <Confirmation 
                 isOpen={isModalOpen} 
                 onClose={closeModal} 
                 onConfirm={() => {
                     if (productToDelete) {
-                        handleDeleteProduct(productToDelete); // Call delete function
+                        handleDeleteProduct(productToDelete); 
                     }
                 }} 
             />
 
-            <ToastContainer /> {/* Toast container for displaying toasts */}
+            <ToastContainer /> 
         </div>
     );
 };

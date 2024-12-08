@@ -194,7 +194,7 @@ app.post('/api/sellerregister', (req, res) => {
             const sellerId = result.insertId; // Get the seller's ID
 
             // Step 2: Insert a new shop for the seller into the 'shops' table
-            const sqlInsertShop = 'INSERT INTO shops (username, owner_id) VALUES (?, ?)';
+            const sqlInsertShop = 'INSERT INTO shops (username, seller_id) VALUES (?, ?)';
             connection.query(sqlInsertShop, [`${username}'s Shop`, sellerId], (err) => {
               if (err) {
                 return connection.rollback(() => {
@@ -658,6 +658,33 @@ app.get('/api/user-products', (req, res) => {
 
     // Send the results back to the client as JSON
     res.status(200).json(results);
+  });
+});
+
+
+// API to delete a product by its ID
+app.delete('/api/product-delete/:id', (req, res) => {
+  const productId = req.params.id;
+
+  console.log('Received productId to delete:', productId);
+
+  // SQL query to delete the product by its ID
+  const sql = `DELETE FROM products WHERE id = ?`;
+
+  // Query the database to delete the product
+  connection.query(sql, [productId], (error, results) => {
+    if (error) {
+      console.error('SQL Error:', error);
+      return res.status(500).json({ message: 'Error deleting product: ' + error.message });
+    }
+
+    // If no rows were affected, the product doesn't exist
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Successfully deleted the product
+    res.status(200).json({ message: 'Product deleted successfully.' });
   });
 });
 
@@ -1207,8 +1234,7 @@ app.post('/api/cartlist', (req, res) => {
 
 
 
-
-// Fetch cart items for a specific user
+// Fetch cart items for a specific user and remove duplicates, keeping one copy
 app.get('/api/cartlistfetch', (req, res) => {
   const userId = req.query.user_id;
 
@@ -1231,20 +1257,46 @@ app.get('/api/cartlistfetch', (req, res) => {
 
     // Fetch cart items for the given user ID
     const query = 'SELECT * FROM cartlist WHERE user_id = ?';
-    connection.query(query, [userId], (err, results) => {
+    connection.query(query, [userId], (err, cartItems) => {
       if (err) {
         console.error('Error fetching cart items:', err);
         return res.status(500).json({ message: 'Database error fetching cart items.' });
       }
 
-      if (results.length > 0) {
-        res.json(results);
+      // If cart is not empty
+      if (cartItems.length > 0) {
+        // Group items by product_id to find duplicates
+        const productIdsCount = {};
+        cartItems.forEach(item => {
+          productIdsCount[item.product_id] = (productIdsCount[item.product_id] || 0) + 1;
+        });
+
+        // For each product_id that has more than one entry, delete the extras
+        const duplicatesToRemove = cartItems.filter(item => productIdsCount[item.product_id] > 1);
+
+        // Iterate through duplicates and delete the extra ones
+        duplicatesToRemove.forEach((duplicate, index) => {
+          if (index > 0) {  // Only delete extra copies, leave one copy
+            const deleteDuplicateQuery = 'DELETE FROM cartlist WHERE user_id = ? AND product_id = ? LIMIT 1';
+            connection.query(deleteDuplicateQuery, [userId, duplicate.product_id], (err) => {
+              if (err) {
+                console.error(`Error deleting duplicate product ${duplicate.product_id}:`, err);
+              }
+            });
+          }
+          productIdsCount[duplicate.product_id]--;
+        });
+
+        // Respond with the cleaned-up cart items, keeping one copy of each product
+        const uniqueCartItems = cartItems.filter(item => productIdsCount[item.product_id] > 0);
+        res.json(uniqueCartItems);
       } else {
         res.status(404).json({ message: 'No products found for this user.' });
       }
     });
   });
 });
+
 
 // Endpoint to place orders
 app.post('/api/buy', (req, res) => {
@@ -1349,10 +1401,32 @@ app.delete('/api/cartlistremove', (req, res) => {
 });
 
 
+// Analytics Endpoint
+app.get('/api/analytics', (req, res) => {
+  const sellerId = req.query.seller_id;
 
+  if (!sellerId) {
+    return res.status(400).json({ message: 'Seller ID is required.' });  // Ensure response is JSON
+  }
 
+  const sql = `
+    SELECT id, product_id, user_id, name, price, quantity, purchase_date, image, status, seller_id
+    FROM orders
+    WHERE seller_id = ?
+  `;
 
+  connection.query(sql, [sellerId], (error, results) => {
+    if (error) {
+      return res.status(500).json({ message: 'Error fetching data', error: error.message });  // Ensure response is JSON
+    }
 
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No data found.' });  // Ensure response is JSON
+    }
+
+    res.status(200).json(results);  // Return data as JSON
+  });
+});
 
 
 app.listen(PORT, () => {

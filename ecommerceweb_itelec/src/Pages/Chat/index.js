@@ -1,65 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react';
-import io from 'socket.io-client';
+import React, { useState } from 'react';
 import './ChatPage.css';  
 
-const socket = io('http://localhost:5001');
-
-const Chat = ({ username }) => {
+const ChatApp = () => {
   const [message, setMessage] = useState('');
-  const [chat, setChat] = useState([]);
-  const chatBoxRef = useRef(null);
+  const [messages, setMessages] = useState([
+    { text: 'hi!', time: '8:42:35 pm', sent: false },
+    { text: 'hello', time: '8:42:35 pm', sent: false },
+  ]);
 
-  useEffect(() => {
-    socket.on('chat message', (msg) => {
-      setChat((prevChat) => [...prevChat, msg]);
-    });
-
-    return () => {
-      socket.off('chat message');
-    };
-  }, []);
-
-  useEffect(() => {
-    if (chatBoxRef.current) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      setMessages([
+        ...messages,
+        { text: message, time: new Date().toLocaleTimeString(), sent: true },
+      ]);
+      setMessage('');  
     }
-  }, [chat]);
-
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (message.trim() === '') return;
-
-    const msgData = { username, message, timestamp: new Date() };
-    socket.emit('chat message', msgData);
-    setChat((prevChat) => [...prevChat, msgData]);
-    setMessage('');
   };
 
   return (
-    <div className="chat-container">
-      <h1 className="chat-title">Name</h1>
-      <div className="chat-box" ref={chatBoxRef}>
-        {chat.map((msg, idx) => (
-          <div key={idx} className="message">
-            <strong>{msg.username}:</strong> {msg.message} <em>({new Date(msg.timestamp).toLocaleTimeString()})</em>
+    <>
+    <div className="chat-app">
+      <div className="header">
+        <div className="profile">
+          <img alt="Profile picture" className="profile-img" src="https://placehold.co/40x40" />
+          <span className="name">NAME</span>
+        </div>
+        <div className="status">
+          <div className="dot"></div>
+          <span>Active now</span>
+        </div>
+      </div>
+      <div className="chat-container">
+        {messages.map((msg, index) => (
+          <div key={index} className={`message ${msg.sent ? 'sent' : ''}`}>
+            <img alt="Profile picture" className="message-img" src="https://placehold.co/40x40" />
+            <div className="text">
+              <span>{msg.text}</span>
+              <span className="time">{msg.time}</span>
+            </div>
           </div>
         ))}
       </div>
-      <form className="input-form" onSubmit={sendMessage}>
+      <div className="input-container">
         <input
+          placeholder="Type a message..."
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type a message..."
-          aria-label="Chat message input"
-          required
         />
-        <button type="submit">Send</button>
-      </form>
+        <button onClick={handleSendMessage}>SEND</button>
+      </div>
     </div>
+    </>
   );
 };
 
-export default Chat;
+export default ChatApp;
+
 
 

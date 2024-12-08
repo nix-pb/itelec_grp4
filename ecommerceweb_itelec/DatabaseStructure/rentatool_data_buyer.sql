@@ -31,7 +31,7 @@ CREATE TABLE `buyer` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `buyer` (
 
 LOCK TABLES `buyer` WRITE;
 /*!40000 ALTER TABLE `buyer` DISABLE KEYS */;
-INSERT INTO `buyer` VALUES (1,'Phoebe','$2b$10$F4lGRG1kWDjtDtKW/ZuLoe8VzEcd10p.3D53wrbi55IZAH9Q2U5Qy','2321300@ub.edu.ph',NULL),(2,'buyer','$2b$10$3qtllf5nB7L8NswH0SvYn.FBvh0d8bCyHIl6m4hwIdm9W5GyMOo5K','buyer@gmail.com',NULL);
+INSERT INTO `buyer` VALUES (4,'Phoebe','$2b$10$2UCokQ.OHkku6wR2XvEmUOV7PRlGo1G4m4lJCs13hWmv3X0A5SAHm','phoebe@gmail.com',NULL);
 /*!40000 ALTER TABLE `buyer` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-08 15:52:12
+-- Dump completed on 2024-12-09  1:10:11

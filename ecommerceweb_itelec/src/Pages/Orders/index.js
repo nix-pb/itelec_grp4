@@ -4,7 +4,7 @@ import ProductListPending from '../ProductListPending';
 import ProductListInTransit from '../ProductListInTransit';
 import ProductListRateNow from '../ProductListRateNow';
 import ProductListReceived from '../ProductListReceived';
-import Header from '../Header';
+import HeaderNoSearch from '../../Components/HeaderNoSearch';
 
 const Orders = () => {
     const navigate = useNavigate();
@@ -13,16 +13,16 @@ const Orders = () => {
 
     return (
         <>
-            <Header />
+            <HeaderNoSearch />
 
-            {/* Buttons to filter order status */}
+            
             <div
                 style={{
                     display: "flex",
                     justifyContent: "center",
                     marginBottom: "20px",
                     marginTop: "20px",
-                    gap: "10px", // Adds space between buttons
+                    gap: "10px", 
                 }}
             >
                 <button
@@ -75,7 +75,7 @@ const Orders = () => {
                 </button>
             </div>
 
-            {/* Render the respective component based on order status */}
+            
             {orderStatus === "Pending" && <ProductListPending />}
             {orderStatus === "In Transit" && <ProductListInTransit />}
             {orderStatus === "Rate Now" && <ProductListRateNow />}

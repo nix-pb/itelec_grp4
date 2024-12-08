@@ -1,26 +1,47 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
-const HeaderBack = () => {
+const HeaderNoSearch = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleBack = () => {
-        navigate(-1); 
+        navigate(-1); // Go back to the previous page
     };
 
     const goToAccountProfile = () => {
         navigate("/AccountProfile");
     };
 
-    const goToCart = () => {
-        navigate("/Cartlist");
+    const goToCartList = () => {
+        navigate("/CartList");
     };
+
+    const goToOrders = () => {
+        navigate("/Orders");
+    };
+
+    const pageTitles = {
+        "/Home": "Home",
+        "/SignIn": "Sign In",
+        "/SignUp": "Sign Up",
+        "/Orders": "History",
+        "/PurchaseForm": "Renting",
+        "/CartList": "Cart",
+        "/AdminAddProduct": "Add Product",
+        "/AdminHome": "Home",
+        "/AccountProfile": "Profile",
+        "/EditProduct/:id": "Edit Product",
+    };
+
+    const currentPageTitle = pageTitles[location.pathname] || "Page";
 
     // Updated Icon Component
     const Icon = ({ name, color }) => {
         const icons = {
             profile: <i className="fas fa-user text-2xl" style={{ color }}></i>,
-            cart: <i className="fas fa-shopping-cart text-2xl" style={{ color }}></i>, 
+            orders: <i className="fas fa-box text-2xl" style={{ color }}></i>,
+            cart: <i className="fas fa-shopping-cart text-2xl" style={{ color }}></i>,
         };
         return icons[name] || null;
     };
@@ -31,7 +52,7 @@ const HeaderBack = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "100%",
-                backgroundColor: "#1e3a8a", 
+                backgroundColor: "#1e3a8a", // Dark blue
                 color: "white",
             }}
         >
@@ -42,7 +63,7 @@ const HeaderBack = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "10px",
-                    backgroundColor: "#192B44", 
+                    backgroundColor: "#192B44", // Blue
                     height: "70px",
                 }}
             >
@@ -51,7 +72,7 @@ const HeaderBack = () => {
                     <button
                         onClick={handleBack}
                         style={{
-                            backgroundColor: "#E8982D", 
+                            backgroundColor: "#E8982D", // Orange
                             color: "white",
                             border: "none",
                             padding: "10px",
@@ -66,6 +87,9 @@ const HeaderBack = () => {
                     >
                         <span style={{ fontSize: "20px" }}>&#8592;</span>
                     </button>
+                    <p style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "10px" }}>
+                        {currentPageTitle}
+                    </p>
                 </div>
 
                 {/* Center Section - Logo */}
@@ -79,6 +103,7 @@ const HeaderBack = () => {
                     }}
                 >
                     <Link
+                        to="/Home"
                         style={{
                             display: "flex",
                             alignItems: "center",
@@ -105,13 +130,10 @@ const HeaderBack = () => {
                         gap: "30px",
                     }}
                 >
-                    
-
-                    {/* Profile Button */}
                     <button
                         onClick={goToAccountProfile}
                         style={{
-                            backgroundColor: "#E8982D", 
+                            backgroundColor: "#E8982D", // Orange
                             border: "none",
                             padding: "10px",
                             borderRadius: "50%",
@@ -127,8 +149,56 @@ const HeaderBack = () => {
                     </button>
                 </div>
             </header>
+
+            {/* Bottom Navigation Section */}
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    backgroundColor: "#C1460E", // Red
+                    padding: "10px",
+                    alignItems: "center",
+                    height: "60px",
+                    gap: "20px",
+                }}
+            >
+                <div
+                    onClick={goToOrders}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        height: "100%",
+                        width: "120px",
+                        justifyContent: "center",
+                        textAlign: "center",
+                    }}
+                >
+                    <Icon name="orders" color="#FFCF36" />
+                    <span style={{ fontSize: "16px", fontWeight: "bold", marginLeft: "8px" }}>
+                        Orders
+                    </span>
+                </div>
+                <div
+                    onClick={goToCartList}
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        height: "100%",
+                        width: "120px",
+                        justifyContent: "center",
+                        textAlign: "center",
+                    }}
+                >
+                    <Icon name="cart" color="#FFCF36" />
+                    <span style={{ fontSize: "16px", fontWeight: "bold", marginLeft: "8px" }}>
+                        Cart
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };
 
-export default HeaderBack;
+export default HeaderNoSearch;

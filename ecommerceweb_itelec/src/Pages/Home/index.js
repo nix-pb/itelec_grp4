@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductListCustomer from '../ProductListCustomer';
 import '../Home/index.css';
-import Header from '../Header';
+import HeaderHome from '../../Components/HeaderHome';
+
+
+
+
 
 
 const Home = () => {
@@ -37,10 +41,12 @@ const Home = () => {
     };
 
 
+    const [searchQuery, setSearchQuery] = useState("");
+
 
     return (
         <>
-            <Header />
+            <HeaderHome onSearch={setSearchQuery} />
             <div className='row'>
                 <button onClick={() => handleCategoryClick(1)} className='category_buttons'>Hand Tools</button>
                 <button onClick={() => handleCategoryClick(2)} className='category_buttons'>Electric Tools</button>
@@ -48,7 +54,7 @@ const Home = () => {
             </div>
             
             <div>
-                <ProductListCustomer selectedCategory={selectedCategory} />
+                <ProductListCustomer selectedCategory={selectedCategory}  searchQuery={searchQuery} />
             </div>
         </>
     );

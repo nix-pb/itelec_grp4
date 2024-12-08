@@ -32,7 +32,7 @@ CREATE TABLE `shops` (
   PRIMARY KEY (`id`),
   KEY `fk_owner` (`seller_id`),
   CONSTRAINT `fk_owner` FOREIGN KEY (`seller_id`) REFERENCES `seller` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `shops` (
 
 LOCK TABLES `shops` WRITE;
 /*!40000 ALTER TABLE `shops` DISABLE KEYS */;
-INSERT INTO `shops` VALUES (1,'hannah\'s Shop',NULL,3,3.25,4);
+INSERT INTO `shops` VALUES (3,'ToolBox\'s Shop',NULL,16,4,1),(4,'Renty\'s Shop',NULL,17,0,0);
 /*!40000 ALTER TABLE `shops` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-08 15:52:12
+-- Dump completed on 2024-12-09  1:10:11

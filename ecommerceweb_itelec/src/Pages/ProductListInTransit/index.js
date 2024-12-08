@@ -7,16 +7,12 @@ const ProductListInTransit = () => {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
 
-  const userId = localStorage.getItem('user_id'); // Use 'user_id' key from localStorage
-
-  const handleProductClick = (id) => {
-    navigate(`/product/${id}`); // Navigate to the specific product detail page
-  };
+  const userId = localStorage.getItem('user_id'); 
 
   // Handle Buy Again button click, navigate to the product page using product_id
   const handleBuyAgain = (productId, event) => {
-    event.stopPropagation(); // Prevent the card's onClick from being triggered
-    navigate(`/product/${productId}`); // Navigate to the product page
+    event.stopPropagation(); 
+    navigate(`/product/${productId}`); 
   };
 
   const handleMarkAsReceived = async (orderId) => {
@@ -84,7 +80,7 @@ const ProductListInTransit = () => {
             <div
               key={order.id}
               className="product-card-order"
-              onClick={() => handleProductClick(order.id)} // Navigate to product page on card click
+              onClick={() => (order.id)} 
             >
               <div className="product-image-wrapper-order">
                 {order.image ? (
@@ -110,7 +106,7 @@ const ProductListInTransit = () => {
                 <div className="product-actions">
                   <button
                     className="buy-again-button"
-                    onClick={(e) => handleBuyAgain(order.product_id, e)} // Use product_id for Buy Again, stop event propagation
+                    onClick={(e) => handleBuyAgain(order.product_id, e)} 
                   >
                     Buy Again
                   </button>
@@ -118,7 +114,7 @@ const ProductListInTransit = () => {
                     <button
                       className="received-button"
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent parent onClick
+                        e.stopPropagation(); 
                         handleMarkAsReceived(order.id);
                       }}
                     >

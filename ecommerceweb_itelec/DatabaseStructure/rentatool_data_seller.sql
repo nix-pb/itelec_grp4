@@ -31,7 +31,7 @@ CREATE TABLE `seller` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `seller` (
 
 LOCK TABLES `seller` WRITE;
 /*!40000 ALTER TABLE `seller` DISABLE KEYS */;
-INSERT INTO `seller` VALUES (1,'nicole','$2b$10$GC0Pw03nOhnY8KF4gHe6YOPH/XF8XH/1BX98YRkyLmGjNWAQCmLKS','nicole11dimaandal@gmail.com',NULL),(2,'pb','$2b$10$uBg./cP/IefOKxNCDIOIs.czELqEh5Sd4XsQxAfFyIy/BynwLIKuG','pb@gmail.com',NULL),(3,'hannah','$2b$10$f4/scQS5AeimI10zv3kw3.Ex9G59O9zALhd4zVDsUa9X5ZvVgbUs.','hannah@gmail.com',NULL);
+INSERT INTO `seller` VALUES (16,'ToolBox','$2b$10$hHewBIgiiYCusfn3tfXDne4xEAju1RhFOWkxwYoEpdo8JVU36cySG','toolbox@gmail.com',NULL),(17,'Renty','$2b$10$LiOEhtzOLpKLDFsOyz7ymeeejYlk3js5NYHZUaD3XxHAkIKstxwVW','renty@gmail.com',NULL);
 /*!40000 ALTER TABLE `seller` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-08 15:52:12
+-- Dump completed on 2024-12-09  1:10:11

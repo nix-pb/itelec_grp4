@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./index.css";
-import Header from "../Header";
-import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer and toast
-import 'react-toastify/dist/ReactToastify.css'; // Import styles for toast
+import HeaderNoSearch from "../../Components/HeaderNoSearch";
+import { ToastContainer, toast } from "react-toastify"; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 
 // Star logo SVG component
@@ -15,14 +15,14 @@ const StarLogo = () => (
 
 const SellerHeader = ({ seller_id }) => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(""); // State to store username
-  const [averageRating, setAverageRating] = useState(""); // State to store average_rating
-  const [ratingCount, setRatingCount] = useState(""); // State to store rating_count
-  const [fetchError, setFetchError] = useState(null); // Error for fetch failures
+  const [username, setUsername] = useState(""); 
+  const [averageRating, setAverageRating] = useState(""); 
+  const [ratingCount, setRatingCount] = useState(""); 
+  const [fetchError, setFetchError] = useState(null); 
 
   useEffect(() => {
     if (!seller_id) {
-      return; // Exit if no seller_id
+      return; 
     }
 
     fetch(`http://localhost:5001/api/shops/${seller_id}`)
@@ -39,7 +39,7 @@ const SellerHeader = ({ seller_id }) => {
         } else {
           setUsername(data.username || "Shop Name Not Available");
           setAverageRating(data.average_rating || "No rating available");
-          setRatingCount(data.rating_count ? `${data.rating_count} reviews` : "No reviews available");
+          setRatingCount(data.rating_count ? `${data.rating_count} reviews` : "No reviews");
           setFetchError(null);
         }
       })
@@ -166,7 +166,7 @@ const ProductListShop = ({ seller_id }) => {
 
 // The default export for Shop (making it the main export)
 const Shop = () => {
-  const location = useLocation(); // Use useLocation to access the query string
+  const location = useLocation(); 
   const [seller_id, setSellerId] = useState(null);
 
   useEffect(() => {
@@ -178,12 +178,12 @@ const Shop = () => {
 
   return (
     <>
-      <Header />
+      <HeaderNoSearch />
       <div className="shop-page">
         {seller_id ? (
           <>
-            <SellerHeader seller_id={seller_id} /> {/* Passing sellerId here */}
-            <ProductListShop seller_id={seller_id} /> {/* Consistently using seller_id in ProductListShop */}
+            <SellerHeader seller_id={seller_id} /> 
+            <ProductListShop seller_id={seller_id} /> 
           </>
         ) : (
           <div>No seller found!</div>

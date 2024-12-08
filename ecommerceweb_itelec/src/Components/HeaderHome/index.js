@@ -1,21 +1,8 @@
 import React from "react";
-import { useNavigate, Link, useLocation } from "react-router-dom";
-import logo from "./logo.png"; 
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useNavigate, Link } from "react-router-dom";
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-/>
-
-
-const Header = () => {
+const HeaderHome = ({ onSearch }) => { 
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const handleBack = () => {
-        navigate(-1); 
-    };
 
     const goToAccountProfile = () => {
         navigate("/AccountProfile");
@@ -29,30 +16,21 @@ const Header = () => {
         navigate("/Orders");
     };
 
-    const pageTitles = {
-        "/Home": "Home",
-        "/SignIn": "Sign In",
-        "/SignUp": "Sign Up",
-        "/Orders": "History",
-        "/PurchaseForm": "Renting",
-        "/CartList": "Cart",
-        "/AdminAddProduct": "Add Product",
-        "/AdminHome": "Home",
-        "/AccountProfile": "Profile",
-        "/EditProduct/:id": "Edit Product",
+    const handleSearch = (event) => {
+        onSearch(event.target.value);
     };
 
-    const currentPageTitle = pageTitles[location.pathname] || "Page";
-
-    const Icon = ({ name }) => {
+    // Updated Icon Component
+    const Icon = ({ name, color }) => {
         const icons = {
-            profile: <i className="fas fa-user text-2xl" style={{ color: "#192B44" }}></i>,
-            orders: <i className="fas fa-box text-2xl" style={{ color: "#FFCF36" }}></i>,
-            cart: <i className="fas fa-shopping-cart text-2xl" style={{ color: "#FFCF36" }}></i>,
-            search: <i className="fas fa-search text-2xl" style={{ color: "#FFFFFF" }}></i>,
+            profile: <i className="fas fa-user text-2xl" style={{ color }}></i>,
+            orders: <i className="fas fa-box text-2xl" style={{ color }}></i>,
+            cart: <i className="fas fa-shopping-cart text-2xl" style={{ color }}></i>,
+            search: <i className="fas fa-search text-2xl" style={{ color }}></i>,
         };
         return icons[name] || null;
     };
+
     return (
         <div
             style={{
@@ -70,35 +48,10 @@ const Header = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "10px",
-                    backgroundColor: "#192B44",
+                    backgroundColor: "#192B44", // Blue
                     height: "70px",
                 }}
             >
-                {/* Left Section */}
-                <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-                    <button
-                        onClick={handleBack}
-                        style={{
-                            backgroundColor: "#E8982D", // Orange
-                            color: "white",
-                            border: "none",
-                            padding: "10px",
-                            borderRadius: "50%",
-                            cursor: "pointer",
-                            width: "40px",
-                            height: "40px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <span style={{ fontSize: "20px" }}>&#8592;</span>
-                    </button>
-                    <p style={{ fontSize: "20px", fontWeight: "bold", marginLeft: "10px" }}>
-                        {currentPageTitle}
-                    </p>
-                </div>
-
                 {/* Center Section - Logo */}
                 <div
                     style={{
@@ -123,6 +76,7 @@ const Header = () => {
                             alt="Tool Zone Logo"
                             style={{ height: "40px", marginRight: "10px", width: "40px" }}
                         />
+
                         <span style={{ fontSize: "24px", fontWeight: "bold" }}>TOOL ZONE</span>
                     </Link>
                 </div>
@@ -133,7 +87,7 @@ const Header = () => {
                         display: "flex",
                         alignItems: "center",
                         height: "100%",
-                        gap: "10px",
+                        gap: "30px",
                     }}
                 >
                     <div
@@ -147,6 +101,7 @@ const Header = () => {
                         <input
                             type="text"
                             placeholder="Search products"
+                            onChange={handleSearch}
                             style={{
                                 padding: "8px",
                                 border: "none",
@@ -170,7 +125,7 @@ const Header = () => {
                                 alignItems: "center",
                             }}
                         >
-                            <i className="fas fa-search text-white"></i>
+                            <Icon name="search" color="#FFFFFF" />
                         </button>
                     </div>
                     <button
@@ -188,7 +143,7 @@ const Header = () => {
                             alignItems: "center",
                         }}
                     >
-                        <i className="fas fa-user text-white"></i>
+                        <Icon name="profile" color="#FFFFFF" />
                     </button>
                 </div>
             </header>
@@ -217,7 +172,7 @@ const Header = () => {
                         textAlign: "center",
                     }}
                 >
-                    <Icon name="orders" color="text-green-500" />
+                    <Icon name="orders" color="#FFCF36" />
                     <span style={{ fontSize: "16px", fontWeight: "bold", marginLeft: "8px" }}>
                         Orders
                     </span>
@@ -234,7 +189,7 @@ const Header = () => {
                         textAlign: "center",
                     }}
                 >
-                    <Icon name="cart" color="text-red-500" />
+                    <Icon name="cart" color="#FFCF36" />
                     <span style={{ fontSize: "16px", fontWeight: "bold", marginLeft: "8px" }}>
                         Cart
                     </span>
@@ -244,4 +199,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default HeaderHome;

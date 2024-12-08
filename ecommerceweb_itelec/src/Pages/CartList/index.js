@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Cartlist.css';
-import Header from '../Header';
+import HeaderNoSearch from '../../Components/HeaderNoSearch';
 import Confirmation from './Confirmation/index'; // Assuming this is the confirmation modal
 
 function Cartlist() {
@@ -37,7 +37,6 @@ function Cartlist() {
         const data = await response.json();
         setProducts(data);
       } catch (error) {
-        toast.error(error.message);
       }
     };
 
@@ -168,6 +167,7 @@ function Cartlist() {
       }
   
       toast.success('Order placed successfully!');
+      setTimeout(() => navigate('/Orders'), 1500);
     } catch (error) {
       toast.error(error.message || 'An error occurred while placing the order');
     }
@@ -175,7 +175,7 @@ function Cartlist() {
 
   return (
     <>
-      <Header />
+      <HeaderNoSearch />
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
       <div className="cart-container">
         <div className="cart-header">
@@ -218,7 +218,6 @@ function Cartlist() {
                 <div className="product-info-cart">
                   <h3>{product.name}</h3>
                   <p className="product-price-cart">PHP {product.price}</p>
-                  <p className="product-seller-id">Seller ID: {product.seller_id}</p>
                 </div>
 
                 <div className="quantity-controls">

@@ -35,7 +35,7 @@ const HeaderAdmin = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "10px",
-                    backgroundColor: "#192B44", 
+                    backgroundColor: "#192B44",
                     height: "70px",
                 }}
             >
@@ -73,9 +73,10 @@ const HeaderAdmin = () => {
                         display: "flex",
                         alignItems: "center",
                         height: "100%",
-                        gap: "30px",
+                        gap: "20px",
                     }}
                 >
+                    {/* Profile Button */}
                     <button
                         onClick={goToAccountProfile}
                         style={{
@@ -93,6 +94,7 @@ const HeaderAdmin = () => {
                     >
                         <Icon name="profile" color="#FFFFFF" />
                     </button>
+                    
                 </div>
             </header>
         </div>

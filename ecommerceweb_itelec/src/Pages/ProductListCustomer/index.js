@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './index.css';
 
-const ProductListCustomer = ({ selectedCategory }) => {
+const ProductListCustomer = ({ selectedCategory, searchQuery  }) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]); 
 
@@ -31,11 +31,17 @@ const ProductListCustomer = ({ selectedCategory }) => {
   console.log('Selected Category:', selectedCategory);
   console.log('All Products:', products);
 
-  const filteredProducts = selectedCategory
-    ? products.filter(product => product.category === selectedCategory) 
-    : products;
+// Combine both filters: category and search
+const filteredProducts = products.filter((product) => {
+  const matchesCategory = !selectedCategory || product.category === selectedCategory;
+  const matchesSearch = 
+    searchQuery && product.name 
+      ? product.name.toLowerCase().startsWith(searchQuery.toLowerCase()) 
+      : true; // Allow all if searchQuery or product.name is undefined
+  return matchesCategory && matchesSearch;
+});
 
-  console.log('Filtered Products:', filteredProducts);
+  
 
   return (
     <div>
