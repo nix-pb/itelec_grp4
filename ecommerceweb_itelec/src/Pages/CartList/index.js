@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';
 import './Cartlist.css';
 import Header from '../Header';
 
@@ -83,57 +83,58 @@ function Cartlist() {
     .filter((product) => selectedProducts[product.id])
     .reduce((total, product) => total + product.price * product.quantity, 0);
 
-    const proceedToCheckout = async () => {
-      // Get the selected products from the cart
-      const selectedItems = products.filter(product => selectedProducts[product.id]);
-    
-      if (selectedItems.length === 0) {
-        toast.error('No products selected for checkout.');
-        return;
+  const proceedToCheckout = async () => {
+    // Get the selected products from the cart
+    const selectedItems = products.filter(product => selectedProducts[product.id]);
+
+    if (selectedItems.length === 0) {
+      toast.error('No products selected for checkout.');
+      return;
+    }
+
+    if (!locationInput) {
+      toast.error('Please provide a delivery address.');
+      return;
+    }
+
+    // Prepare the order data to send to the backend
+    const orderData = selectedItems.map(product => ({
+      user_id: userId,
+      product_id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: product.quantity,
+      purchase_date: new Date().toISOString(),
+      image: product.image,
+      seller_id: product.seller_id,  // Ensure this is included
+      selected_date: selectedDates[product.id] || null,
+      location: locationInput, // Include the location in the order data
+    }));
+
+    console.log('Order data being sent:', orderData);
+
+    try {
+      const response = await fetch('http://localhost:5001/api/buy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to place order');
       }
-    
-      if (!locationInput) {
-        toast.error('Please provide a delivery address.');
-        return;
-      }
-    
-      // Prepare the order data to send to the backend
-      const orderData = selectedItems.map(product => ({
-        user_id: userId,
-        product_id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: product.quantity,
-        purchase_date: new Date().toISOString(),
-        image: product.image,
-        seller_id: product.seller_id,  // Ensure this is included
-        selected_date: selectedDates[product.id] || null,
-        location: locationInput, // Include the location in the order data
-      }));
-    
-      try {
-        const response = await fetch('http://localhost:5001/api/buy', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(orderData),
-        });
-    
-        const data = await response.json();
-    
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to place order');
-        }
-    
-        toast.success('Order placed successfully!');
-        // Optionally, redirect to an order confirmation page
-        navigate('/order-confirmation');
-      } catch (error) {
-        toast.error(error.message || 'An error occurred while placing the order');
-      }
-    };
-    
+
+      toast.success('Order placed successfully!');
+      // Optionally, redirect to an order confirmation page
+      navigate('/order-confirmation');
+    } catch (error) {
+      toast.error(error.message || 'An error occurred while placing the order');
+    }
+  };
 
   return (
     <>
@@ -182,6 +183,8 @@ function Cartlist() {
                 <div className="product-info-cart">
                   <h3>{product.name}</h3>
                   <p className="product-price-cart">PHP {product.price}</p>
+                  {/* Display seller_id */}
+                  <p className="product-seller-id">Seller ID: {product.seller_id}</p>
                 </div>
 
                 <div className="quantity-controls">

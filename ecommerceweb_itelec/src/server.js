@@ -461,73 +461,6 @@ app.post('/add-product', [
 
 
 
-app.post('/api/buy', (req, res) => {
-  const orders = req.body; // This is an array of order data
-  
-  if (!Array.isArray(orders) || orders.length === 0) {
-    return res.status(400).json({ message: 'No order data provided.' });
-  }
-
-  // Validate each order item
-  for (const order of orders) {
-    const { user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location } = order;
-
-    // Create an array to track missing fields for each order
-    const missingFields = [];
-    
-    if (!user_id) missingFields.push('user_id');
-    if (!product_id) missingFields.push('product_id');
-    if (!name) missingFields.push('name');
-    if (!price) missingFields.push('price');
-    if (!quantity) missingFields.push('quantity');
-    if (!purchase_date) missingFields.push('purchase_date');
-    if (!image) missingFields.push('image');
-    if (!seller_id) missingFields.push('seller_id');
-    if (!location) missingFields.push('location');
-
-    // If there are any missing fields, send a specific error message
-    if (missingFields.length > 0) {
-      return res.status(400).json({ 
-        message: `Missing required fields: ${missingFields.join(', ')} in the order data.` 
-      });
-    }
-  }
-
-  // Insert each order into the database
-  const sql = `
-    INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
-
-  const orderPromises = orders.map(order =>
-    new Promise((resolve, reject) => {
-      connection.query(
-        sql,
-        [order.user_id, order.product_id, order.name, order.price, order.quantity, order.purchase_date, order.image, order.seller_id, order.location],
-        (err, results) => {
-          if (err) {
-            console.error('Database error:', err);
-            reject({ message: 'An error occurred while placing an order.', error: err.message });
-          } else {
-            resolve(results.insertId);
-          }
-        }
-      );
-    })
-  );
-
-  // Wait for all order promises to resolve
-  Promise.all(orderPromises)
-    .then(orderIds => {
-      res.status(200).json({ message: 'Order(s) placed successfully!', orderIds });
-    })
-    .catch(error => {
-      res.status(500).json({ message: error.message || 'Failed to place orders.' });
-    });
-});
-
-
-
  
 // update a product
 app.put('/api/products/:id', [
@@ -1213,9 +1146,9 @@ app.get('/api/productsshop', (req, res) => {
 });
 
 
-//cartlist
+// cartlist
 app.post('/api/cartlist', (req, res) => {
-  const { productId, userId, name, price, image, quantity } = req.body;
+  const { productId, userId, name, price, image, quantity, sellerId } = req.body;
 
   // Validate input and return specific error message for each missing field
   if (!productId) {
@@ -1233,6 +1166,9 @@ app.post('/api/cartlist', (req, res) => {
   if (!quantity) {
     return res.status(400).json({ message: 'Quantity is required.' });
   }
+  if (!sellerId) {
+    return res.status(400).json({ message: 'Seller ID is required.' });
+  }
 
   // Check if the user (buyer) exists in the buyer table
   const checkUserSql = 'SELECT id FROM buyer WHERE id = ?';
@@ -1246,15 +1182,15 @@ app.post('/api/cartlist', (req, res) => {
       return res.status(400).json({ message: 'User not found.' });
     }
 
-    // SQL query to insert product into the cart
+    // SQL query to insert product into the cart, including seller_id
     const insertCartSql = `
-      INSERT INTO cartlist (product_id, user_id, name, price, image, quantity)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO cartlist (product_id, user_id, name, price, image, quantity, seller_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
 
     connection.query(
       insertCartSql,
-      [productId, userId, name, price, image, quantity],
+      [productId, userId, name, price, image, quantity, sellerId],
       (err, results) => {
         if (err) {
           console.error('Error adding product to cart:', err);
@@ -1270,6 +1206,8 @@ app.post('/api/cartlist', (req, res) => {
 
 
 
+
+// Fetch cart items for a specific user
 app.get('/api/cartlistfetch', (req, res) => {
   const userId = req.query.user_id;
 
@@ -1299,12 +1237,88 @@ app.get('/api/cartlistfetch', (req, res) => {
       }
 
       if (results.length > 0) {
-        res.json(results);  
+        res.json(results);
       } else {
         res.status(404).json({ message: 'No products found for this user.' });
       }
     });
   });
+});
+
+// Endpoint to place orders
+app.post('/api/buy', (req, res) => {
+  const orders = req.body; // This is an array of order data
+
+  if (!Array.isArray(orders) || orders.length === 0) {
+    return res.status(400).json({ message: 'No order data provided.' });
+  }
+
+  // Validate each order item
+  for (const order of orders) {
+    const { user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location } = order;
+
+    // Create an array to track missing fields for each order
+    const missingFields = [];
+
+    if (!user_id) missingFields.push('user_id');
+    if (!product_id) missingFields.push('product_id');
+    if (!name) missingFields.push('name');
+    if (!price) missingFields.push('price');
+    if (!quantity) missingFields.push('quantity');
+    if (!purchase_date) missingFields.push('purchase_date');
+    if (!image) missingFields.push('image');
+    if (!seller_id) missingFields.push('seller_id');
+    if (!location) missingFields.push('location');
+
+    // If there are any missing fields, send a specific error message
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: `Missing required fields: ${missingFields.join(', ')} in the order data.`,
+      });
+    }
+  }
+
+  // Insert each order into the database
+  const sql = `
+    INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  const orderPromises = orders.map((order) =>
+    new Promise((resolve, reject) => {
+      connection.query(
+        sql,
+        [
+          order.user_id,
+          order.product_id,
+          order.name,
+          order.price,
+          order.quantity,
+          order.purchase_date,
+          order.image,
+          order.seller_id,
+          order.location,
+        ],
+        (err, results) => {
+          if (err) {
+            console.error('Database error:', err);
+            reject({ message: 'An error occurred while placing an order.', error: err.message });
+          } else {
+            resolve(results.insertId);
+          }
+        }
+      );
+    })
+  );
+
+  // Wait for all order promises to resolve
+  Promise.all(orderPromises)
+    .then((orderIds) => {
+      res.status(200).json({ message: 'Order(s) placed successfully!', orderIds });
+    })
+    .catch((error) => {
+      res.status(500).json({ message: error.message || 'Failed to place orders.' });
+    });
 });
 
 app.listen(PORT, () => {
