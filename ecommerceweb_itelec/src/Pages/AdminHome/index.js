@@ -14,28 +14,9 @@ const AdminHome = () => {
     const location = useLocation();
     const userId = localStorage.getItem('user_id');
 
-    const [chartData, setChartData] = useState({ dates: [], quantities: [] });
-    const [monthlySales, setMonthlySales] = useState({ revenue: 0, products_sold: 0, products_displayed: 0 });
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        axios.get('/api/chart-data') 
-            .then(response => {
-                setChartData(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching chart data:', error);
-            });
-
-        axios.get('/api/monthly-sales')
-            .then(response => {
-                setMonthlySales(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching monthly sales data:', error);
-            });
-    }, []);
 
     // Fetch orders for the logged-in user
     useEffect(() => {
@@ -84,20 +65,6 @@ const AdminHome = () => {
             <ModalComponent />
             <h1>Seller Dashboard</h1>
             <ToastContainer />
-            <div className="chart-container">
-                <LineChart chartData={chartData} />
-            </div>
-            <div className="info-container">
-                <div className="info-box">
-                    <p><strong>Revenue:</strong> PHP {monthlySales.revenue}</p>
-                </div>
-                <div className="info-box">
-                    <p><strong>Products Sold:</strong> {monthlySales.products_sold}</p>
-                </div>
-                <div className="info-box">
-                    <p><strong>Products Displayed:</strong> {monthlySales.products_displayed}</p>
-                </div>
-            </div>
 
             {/* Orders Table */}
             <div className="orders-container">

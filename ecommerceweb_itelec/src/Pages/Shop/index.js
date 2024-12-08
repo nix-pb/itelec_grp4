@@ -74,9 +74,11 @@ const SellerHeader = ({ seller_id }) => {
         </div>
       </div>
       <div className="seller-actions">
-        <button className="chat-button" onClick={handleChatClick}>
-          Chat
-        </button>
+     {/* 
+  <button className="chat-button" onClick={handleChatClick}>
+    Chat
+  </button>
+*/}
       </div>
     </div>
   );
@@ -95,31 +97,30 @@ const ProductListShop = ({ seller_id }) => {
       console.error('Seller ID is missing');
       return;
     }
-
+  
     const fetchProducts = async () => {
       try {
         const response = await fetch(`http://localhost:5001/api/productsshop?seller_id=${seller_id}`);
-        
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }
-        
         const data = await response.json();
         console.log('Fetched Products:', data);
-
+  
         if (data.length === 0) {
           toast.error("No products found for this seller.");
         } else {
-          setProducts(data);  // Update state with fetched data
+          setProducts(data);
         }
       } catch (error) {
         console.error('Error fetching products:', error);
         toast.error("Error fetching products: " + error.message);
       }
     };
-
+  
     fetchProducts();
-}, [seller_id]);
+  }, [seller_id]);
+  
 
   
 

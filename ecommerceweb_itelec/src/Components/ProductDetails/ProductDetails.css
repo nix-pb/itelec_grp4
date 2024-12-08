@@ -14,6 +14,7 @@
   margin-bottom: 10px; /* Space below the buttons */
 }
 
+
 .icon-button {
   background-color: rgb(199, 98, 25); /* Orange background for Shop/Chat */
   border: none;
@@ -43,10 +44,12 @@ h2 {
   color: #333; /* Darker text for better readability */
 }
 
-.row {
+.rowrent {
   display: flex;
   gap: 20px; /* Space between Rent and Add to Cart buttons */
   margin-top: 20px;
+  justify-content: center; /* Ensure the buttons are centered */
+  width: 80%;
 }
 
 button {

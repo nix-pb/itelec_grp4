@@ -12,6 +12,10 @@ const HeaderCustomer = () => {
         navigate("/AccountProfile");
     };
 
+    const goToCart = () => {
+        navigate("/Cartlist");
+    };
+
     // Updated Icon Component
     const Icon = ({ name, color }) => {
         const icons = {
@@ -106,6 +110,7 @@ const HeaderCustomer = () => {
 
                     {/* Cart Button (Optional) */}
                     <button
+                        onClick={goToCart}
                         style={{
                             backgroundColor: "#E8982D", // Orange
                             border: "none",
