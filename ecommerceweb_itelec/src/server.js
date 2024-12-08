@@ -1146,9 +1146,9 @@ app.get('/api/productsshop', (req, res) => {
 });
 
 
-// cartlist
+// cartlist POST request
 app.post('/api/cartlist', (req, res) => {
-  const { productId, userId, name, price, image, quantity, sellerId } = req.body;
+  const { productId, userId, name, price, image, quantity, seller_id } = req.body;
 
   // Validate input and return specific error message for each missing field
   if (!productId) {
@@ -1166,7 +1166,7 @@ app.post('/api/cartlist', (req, res) => {
   if (!quantity) {
     return res.status(400).json({ message: 'Quantity is required.' });
   }
-  if (!sellerId) {
+  if (!seller_id) {  // Ensure we are using seller_id
     return res.status(400).json({ message: 'Seller ID is required.' });
   }
 
@@ -1190,7 +1190,7 @@ app.post('/api/cartlist', (req, res) => {
 
     connection.query(
       insertCartSql,
-      [productId, userId, name, price, image, quantity, sellerId],
+      [productId, userId, name, price, image, quantity, seller_id], // Use seller_id correctly
       (err, results) => {
         if (err) {
           console.error('Error adding product to cart:', err);
@@ -1202,7 +1202,6 @@ app.post('/api/cartlist', (req, res) => {
     );
   });
 });
-
 
 
 
@@ -1278,10 +1277,10 @@ app.post('/api/buy', (req, res) => {
     }
   }
 
-  // Insert each order into the database
+  // Insert each order into the database, including the 'Pending' status
   const sql = `
-    INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const orderPromises = orders.map((order) =>
@@ -1298,6 +1297,7 @@ app.post('/api/buy', (req, res) => {
           order.image,
           order.seller_id,
           order.location,
+          'Pending', 
         ],
         (err, results) => {
           if (err) {

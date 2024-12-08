@@ -12,27 +12,26 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Navigate to Order Form with product details
   const goToOrderForm = () => {
     console.log('Product being passed:', product);
     navigate('/OrderForm', { state: { id: product.id, name: product.name, price: product.price, image: product.image, seller_id: product.seller_id } });
   };
 
+  // Function to add the product to the cart
   const addToCart = async () => {
-    // Fetch the user_id from localStorage
     const userId = localStorage.getItem('user_id'); // Fetch dynamic user ID from local storage
-    
-    // Log the user ID to debug
+  
     console.log('User ID from localStorage:', userId);
-
-    // If user_id is not found in localStorage, show an error
+  
     if (!userId) {
       toast.error('User not logged in. Please log in to add items to the cart.');
       return;
     }
-
+  
     // Check for missing fields and show a toast for each missing one
     let hasError = false;
-
+  
     if (!product.id) {
       toast.error('Product ID is required.');
       hasError = true;
@@ -49,12 +48,15 @@ const ProductDetails = () => {
       toast.error('Product image is required.');
       hasError = true;
     }
-
-    // If any field is missing, stop execution
+    if (!product.seller_id) {
+      toast.error('Seller ID is required.');
+      hasError = true;
+    }
+  
     if (hasError) {
       return;
     }
-
+  
     const orderData = {
       productId: product.id, 
       userId: userId,
@@ -62,8 +64,9 @@ const ProductDetails = () => {
       price: product.price,
       image: product.image,
       quantity: 1,
+      seller_id: product.seller_id,  // Add seller_id to the order data
     };
-
+  
     try {
       const response = await fetch('http://localhost:5001/api/cartlist', {
         method: 'POST',
@@ -72,35 +75,37 @@ const ProductDetails = () => {
         },
         body: JSON.stringify(orderData),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to add product to cart');
       }
-
+  
       const data = await response.json();
       console.log('Product added to cart successfully:', data);
-      toast.success('Product added to cart successfully');
+      toast.success('Product added to cart successfully');  // Display success message
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      toast.error(`There was an issue adding the product to your cart. ${error.message}`);
+      toast.error(`There was an issue adding the product to your cart. ${error.message}`);  // Error message if the request fails
     }
   };
+  
 
+  // Navigate to the shop page of the product seller
   const goToShop = () => {
     if (product?.seller_id) {
-      // Pass the seller_id to the /shop route via query params
       navigate(`/shop?seller_id=${product.seller_id}`);
     }
   };
 
+  // Navigate to the chat page with the product seller
   const goToChat = () => {
     if (product?.seller_id) {
-      // Pass the seller_id to the /chat route via query params
       navigate(`/chat?seller_id=${product.seller_id}`);
     }
   };
 
+  // Fetch product details
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
@@ -120,10 +125,12 @@ const ProductDetails = () => {
     fetchProductDetails();
   }, [id]);
 
+  // Display loading state
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // Display product not found message
   if (!product) {
     return <div>Product not found!</div>;
   }
@@ -162,7 +169,6 @@ const ProductDetails = () => {
           <button className="rent-button" onClick={goToOrderForm}>Rent now</button>
           
           <button className="add-to-cart-button" onClick={addToCart}>Add to cart</button>
-          
         </div>
       </div>
     </>

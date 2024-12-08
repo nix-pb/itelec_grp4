@@ -83,58 +83,63 @@ function Cartlist() {
     .filter((product) => selectedProducts[product.id])
     .reduce((total, product) => total + product.price * product.quantity, 0);
 
-  const proceedToCheckout = async () => {
-    // Get the selected products from the cart
-    const selectedItems = products.filter(product => selectedProducts[product.id]);
-
-    if (selectedItems.length === 0) {
-      toast.error('No products selected for checkout.');
-      return;
-    }
-
-    if (!locationInput) {
-      toast.error('Please provide a delivery address.');
-      return;
-    }
-
-    // Prepare the order data to send to the backend
-    const orderData = selectedItems.map(product => ({
-      user_id: userId,
-      product_id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: product.quantity,
-      purchase_date: new Date().toISOString(),
-      image: product.image,
-      seller_id: product.seller_id,  // Ensure this is included
-      selected_date: selectedDates[product.id] || null,
-      location: locationInput, // Include the location in the order data
-    }));
-
-    console.log('Order data being sent:', orderData);
-
-    try {
-      const response = await fetch('http://localhost:5001/api/buy', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to place order');
+    const proceedToCheckout = async () => {
+      // Get the selected products from the cart
+      const selectedItems = products.filter(product => selectedProducts[product.id]);
+    
+      if (selectedItems.length === 0) {
+        toast.error('No products selected for checkout.');
+        return;
       }
-
-      toast.success('Order placed successfully!');
-      // Optionally, redirect to an order confirmation page
-      navigate('/order-confirmation');
-    } catch (error) {
-      toast.error(error.message || 'An error occurred while placing the order');
-    }
-  };
+    
+      if (!locationInput) {
+        toast.error('Please provide a delivery address.');
+        return;
+      }
+    
+      // Prepare the order data to send to the backend
+      const orderData = selectedItems.map(product => {
+        // Use the selected date or fallback to current date if none is selected
+        const purchaseDate = selectedDates[product.id] || new Date().toISOString().slice(0, 19).replace('T', ' ');
+    
+        return {
+          user_id: userId,
+          product_id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: product.quantity,
+          purchase_date: purchaseDate, // Use selected date here
+          image: product.image,
+          seller_id: product.seller_id,  // Ensure this is included
+          selected_date: selectedDates[product.id] || null,
+          location: locationInput, // Include the location in the order data
+        };
+      });
+    
+      console.log('Order data being sent:', orderData);
+    
+      try {
+        const response = await fetch('http://localhost:5001/api/buy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData),
+        });
+    
+        const data = await response.json();
+    
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to place order');
+        }
+    
+        toast.success('Order placed successfully!');
+        // No redirect; only display success message
+      } catch (error) {
+        toast.error(error.message || 'An error occurred while placing the order');
+      }
+    };
+    
 
   return (
     <>
