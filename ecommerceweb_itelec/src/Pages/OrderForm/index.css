@@ -6,8 +6,9 @@
   border: 2px solid orange;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 1%;
+  margin-bottom: 3%;
 }
-
 
 .order-form h2 {
   text-align: center;
@@ -16,13 +17,11 @@
   margin-bottom: 20px;
 }
 
-
 .order-form p {
   font-size: 1.2rem;
   color: #333;
   margin-bottom: 15px;
 }
-
 
 .order-form label {
   font-size: 1rem;
@@ -31,11 +30,10 @@
   display: block;
 }
 
-
 .order-form input[type="number"],
 .order-form input[type="date"] {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -43,10 +41,9 @@
   box-sizing: border-box;
 }
 
-
 .order-form button {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   font-size: 1.2rem;
   background-color: orange;
   color: white;
@@ -54,43 +51,49 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 20px;
 }
+
 
 .order-form button:hover {
   background-color: rgb(255, 208, 0);
   color: black;
 }
 
-
-.order-form input:focus, 
+.order-form input:focus,
 .order-form button:focus {
   outline: 3px solid orange;
   outline-offset: 2px;
 }
 
-
-@media (max-width: 600px) {
-  .order-form {
-    padding: 10px;
-  }
-
-  .order-form h2 {
-    font-size: 1.5rem;
-  }
-
-  .order-form button {
-    font-size: 1rem;
-  }
-}
-
-
 .product-image-container {
   max-width: 300px; /* You can adjust this based on your design */
   margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .product-image {
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .order-form {
+    padding: 15px;
+  }
+
+  .order-form h2 {
+    font-size: 1.6rem;
+  }
+
+  .order-form button {
+    font-size: 1rem;
+  }
+
+  .product-image-container {
+    max-width: 100%;
+  }
 }

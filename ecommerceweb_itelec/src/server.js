@@ -470,7 +470,7 @@ app.post('/api/buy', (req, res) => {
 
   // Validate each order item
   for (const order of orders) {
-    const { user_id, product_id, name, price, quantity, purchase_date, image, seller_id } = order;
+    const { user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location } = order;
 
     // Create an array to track missing fields for each order
     const missingFields = [];
@@ -483,6 +483,7 @@ app.post('/api/buy', (req, res) => {
     if (!purchase_date) missingFields.push('purchase_date');
     if (!image) missingFields.push('image');
     if (!seller_id) missingFields.push('seller_id');
+    if (!location) missingFields.push('location');
 
     // If there are any missing fields, send a specific error message
     if (missingFields.length > 0) {
@@ -494,15 +495,15 @@ app.post('/api/buy', (req, res) => {
 
   // Insert each order into the database
   const sql = `
-    INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const orderPromises = orders.map(order =>
     new Promise((resolve, reject) => {
       connection.query(
         sql,
-        [order.user_id, order.product_id, order.name, order.price, order.quantity, order.purchase_date, order.image, order.seller_id],
+        [order.user_id, order.product_id, order.name, order.price, order.quantity, order.purchase_date, order.image, order.seller_id, order.location],
         (err, results) => {
           if (err) {
             console.error('Database error:', err);
@@ -1173,7 +1174,7 @@ app.get('/api/shops/:seller_id', (req, res) => {
 
 // shop list
 app.get('/api/productsshop', (req, res) => {
-  const { seller_id } = req.query;  // Use req.query to extract seller_id
+  const { seller_id } = req.query; 
 
   if (!seller_id) {
     return res.status(400).json({ message: 'Seller ID is required.' });
@@ -1298,7 +1299,7 @@ app.get('/api/cartlistfetch', (req, res) => {
       }
 
       if (results.length > 0) {
-        res.json(results);  // Return the cart items
+        res.json(results);  
       } else {
         res.status(404).json({ message: 'No products found for this user.' });
       }

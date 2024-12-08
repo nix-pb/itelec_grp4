@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import Toastify CSS
+import 'react-toastify/dist/ReactToastify.css'; 
 import './Cartlist.css';
 import Header from '../Header';
 
@@ -9,9 +9,8 @@ function Cartlist() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState({});
-  const [selectedDates, setSelectedDates] = useState({}); // Track selected dates
-
-  
+  const [selectedDates, setSelectedDates] = useState({});
+  const [locationInput, setLocationInput] = useState(''); // Location input state
 
   // Get user ID from localStorage
   const userId = localStorage.getItem('user_id');
@@ -35,7 +34,7 @@ function Cartlist() {
         const data = await response.json();
         setProducts(data);
       } catch (error) {
-        toast.error(error.message); // Show specific error message
+        toast.error(error.message); 
       }
     };
 
@@ -50,7 +49,7 @@ function Cartlist() {
     setProducts((prevProducts) =>
       prevProducts.map((product) => {
         if (product.id === productId) {
-          const newQuantity = Math.max(product.quantity + change, 0); // Prevent negative quantity
+          const newQuantity = Math.max(product.quantity + change, 0);
           return { ...product, quantity: newQuantity };
         }
         return product;
@@ -72,6 +71,10 @@ function Cartlist() {
     }));
   };
 
+  const handleLocationChange = (e) => {
+    setLocationInput(e.target.value); // Update location state
+  };
+
   const removeProduct = (id) => {
     setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
   };
@@ -80,50 +83,57 @@ function Cartlist() {
     .filter((product) => selectedProducts[product.id])
     .reduce((total, product) => total + product.price * product.quantity, 0);
 
-  const proceedToCheckout = async () => {
-    // Get the selected products from the cart
-    const selectedItems = products.filter(product => selectedProducts[product.id]);
-
-    if (selectedItems.length === 0) {
-      toast.error('No products selected for checkout.');
-      return;
-    }
-
-    // Prepare the order data to send to the backend
-    const orderData = selectedItems.map(product => ({
-      user_id: userId,
-      product_id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: product.quantity,
-      purchase_date: new Date().toISOString(),  // Current date for the purchase
-      image: product.image,
-      seller_id: product.seller_id,  
-      selected_date: selectedDates[product.id] || null,  // Use the selected date
-    }));
-
-    try {
-      const response = await fetch('http://localhost:5001/api/buy', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to place order');
+    const proceedToCheckout = async () => {
+      // Get the selected products from the cart
+      const selectedItems = products.filter(product => selectedProducts[product.id]);
+    
+      if (selectedItems.length === 0) {
+        toast.error('No products selected for checkout.');
+        return;
       }
-
-      toast.success('Order placed successfully!');
-      // Optionally, redirect to an order confirmation page
-      navigate('/order-confirmation');
-    } catch (error) {
-      toast.error(error.message || 'An error occurred while placing the order');
-    }
-  };
+    
+      if (!locationInput) {
+        toast.error('Please provide a delivery address.');
+        return;
+      }
+    
+      // Prepare the order data to send to the backend
+      const orderData = selectedItems.map(product => ({
+        user_id: userId,
+        product_id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: product.quantity,
+        purchase_date: new Date().toISOString(),
+        image: product.image,
+        seller_id: product.seller_id,  // Ensure this is included
+        selected_date: selectedDates[product.id] || null,
+        location: locationInput, // Include the location in the order data
+      }));
+    
+      try {
+        const response = await fetch('http://localhost:5001/api/buy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderData),
+        });
+    
+        const data = await response.json();
+    
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to place order');
+        }
+    
+        toast.success('Order placed successfully!');
+        // Optionally, redirect to an order confirmation page
+        navigate('/order-confirmation');
+      } catch (error) {
+        toast.error(error.message || 'An error occurred while placing the order');
+      }
+    };
+    
 
   return (
     <>
@@ -224,6 +234,18 @@ function Cartlist() {
               <span>Total</span>
               <span>₱{subtotal.toFixed(2)}</span>
             </div>
+
+            {/* New Location Input */}
+            <label htmlFor="locationInput">Delivery Address:</label>
+            <input
+              type="text"
+              id="locationInput"
+              value={locationInput}
+              onChange={handleLocationChange}
+              required
+              placeholder="Enter delivery address"
+            />
+
             <button onClick={proceedToCheckout}>Proceed to Checkout</button>
           </div>
         </div>
