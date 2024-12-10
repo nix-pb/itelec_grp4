@@ -1,8 +1,10 @@
 
 import React from 'react';
+import './ModalComponent.css';
+
 
 const ModalComponent = ({ isOpen, toggleModal }) => {
-    if (!isOpen) return null; // Don't render the modal if it's closed
+    if (!isOpen) return null; 
 
     return (
         <div className="modal">

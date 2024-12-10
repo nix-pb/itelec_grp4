@@ -470,41 +470,47 @@ app.put('/api/products/:id', [
   body('description').optional().notEmpty().withMessage('Description is required'),
   body('price').optional().isFloat({ gt: 0 }).withMessage('Price must be a positive number'),
   body('image').optional(),
-  body('category').optional().notEmpty().withMessage('Category is required')
+  body('category').optional().notEmpty().withMessage('Category is required'),
+  body('term_id').optional().notEmpty().withMessage('Term ID is required'), // Validate term_id
+  body('term_value').optional().notEmpty().withMessage('Term value is required') // Validate term_value
 ], (req, res) => {
   const productId = req.params.id;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, description, price, image, category } = req.body;
+  const { name, description, price, image, category, term_id, term_value } = req.body;
 
   const sql = `
-    UPDATE products 
-    SET name = COALESCE(?, name), 
-        description = COALESCE(?, description), 
-        price = COALESCE(?, price), 
-        image = COALESCE(?, image), 
-        category = COALESCE(?, category)
-    WHERE id = ?
+      UPDATE products 
+      SET name = COALESCE(?, name), 
+          description = COALESCE(?, description), 
+          price = COALESCE(?, price), 
+          image = COALESCE(?, image), 
+          category = COALESCE(?, category),
+          term_id = COALESCE(?, term_id),  
+          term_value = COALESCE(?, term_value)  
+      WHERE id = ?
   `;
 
-  connection.query(sql, [name, description, price, image, category, productId], (error, results) => {
-    if (error) {
-      console.error('SQL Error: ', error);
-      return res.status(500).json({ message: 'Failed to update product: ' + error.message });
-    }
+  connection.query(sql, [name, description, price, image, category, term_id, term_value, productId], (error, results) => {
+      if (error) {
+          console.error('SQL Error: ', error);
+          return res.status(500).json({ message: 'Failed to update product: ' + error.message });
+      }
 
-    if (results.affectedRows === 0) {
-      return res.status(404).json({ message: 'Product not found.' });
-    }
+      if (results.affectedRows === 0) {
+          return res.status(404).json({ message: 'Product not found.' });
+      }
 
-    console.log('Product updated with ID:', productId);
-    res.status(200).json({ message: 'Product updated successfully' });
+      console.log('Product updated with ID:', productId);
+      res.status(200).json({ message: 'Product updated successfully' });
   });
 });
+
+
 
 //delete a product
 app.delete('/api/products/:id', (req, res) => {

@@ -1,0 +1,52 @@
+/* Modal Background */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+/* Modal Content Box */
+.modal p {
+    font-size: 18px;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    background-color: #FF7043; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+}
+
+/* Modal Close Button */
+.modal button {
+    background-color: #FF5722; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+}
+
+/* Button Hover Effect */
+.modal button:hover {
+    background-color: #F4511E;
+    transform: scale(1.05);
+}
+
+/* Button Focus Effect */
+.modal button:focus {
+    outline: none;
+}

@@ -50,7 +50,10 @@ const EditProduct = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProduct(prev => ({ ...prev, [name]: value }));
+        setProduct(prev => ({
+            ...prev,
+            [name]: value // Ensure term_id and term_value are updated correctly
+        }));
     };
 
     const handleImageUpdate = (imageUrl) => {
@@ -77,7 +80,10 @@ const EditProduct = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ...product, price: priceAsNumber }),
+                body: JSON.stringify({
+                    ...product,  // Include term_id and term_value from the state
+                    price: priceAsNumber, 
+                }),
             });
     
             if (!response.ok) {
@@ -109,112 +115,107 @@ const EditProduct = () => {
         }
     };
     
-    
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
     return (
         <>
-        <HeaderBack/>
-        <div className="admin-dashboard">
-            <h2>Edit Product</h2>
-            <form onSubmit={handleFormSubmit}>
-                {/* Form Fields */}
-                <div className="form-group">
-                    <label htmlFor="name">Product Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={product.name}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+            <HeaderBack/>
+            <div className="admin-dashboard">
+                <h2>Edit Product</h2>
+                <form onSubmit={handleFormSubmit}>
+                    {/* Form Fields */}
+                    <div className="form-group">
+                        <label htmlFor="name">Product Name</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={product.name}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={product.description}
-                        onChange={handleInputChange}
-                        required
-                    ></textarea>
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            value={product.description}
+                            onChange={handleInputChange}
+                            required
+                        ></textarea>
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="price">Price</label>
-                    <input
-                        type="number"
-                        id="price"
-                        name="price"
-                        value={product.price}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="price">Price</label>
+                        <input
+                            type="number"
+                            id="price"
+                            name="price"
+                            value={product.price}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="category">Category</label>
-                    <select
-                        id="category"
-                        name="category"
-                        value={product.category}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">Select Category</option>
-                        <option value="1">Hand Tools</option>
-                        <option value="2">Electric Tools</option>
-                        <option value="3">Heavy Tools</option>
-                    </select>
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="category">Category</label>
+                        <select
+                            id="category"
+                            name="category"
+                            value={product.category}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="">Select Category</option>
+                            <option value="1">Hand Tools</option>
+                            <option value="2">Electric Tools</option>
+                            <option value="3">Heavy Tools</option>
+                        </select>
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="term_value">Term Value</label>
-                    <input
-                        type="text"
-                        id="term_value"
-                        name="term_value"
-                        value={product.term_value}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="term_value">Term Value</label>
+                        <input
+                            type="text"
+                            id="term_value"
+                            name="term_value"
+                            value={product.term_value}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
 
-                <div className="form-group">
-                    <label htmlFor="term_id">Hourly / Daily / Weekly</label>
-                    <select
-                        id="term_id"
-                        name="term_id"
-                        value={product.term_id}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">Select Term</option>
-                        <option value="Hour">Hour</option>
-                        <option value="Day">Day</option>
-                        <option value="Week">Week</option>
-                    </select>
-                </div>
+                    <div className="form-group">
+                        <label htmlFor="term_id">Hourly / Daily / Weekly</label>
+                        <select
+                            id="term_id"
+                            name="term_id"
+                            value={product.term_id}
+                            onChange={handleInputChange}
+                            required
+                        >
+                            <option value="">Select Term</option>
+                            <option value="Hour">Hour</option>
+                            <option value="Day">Day</option>
+                            <option value="Week">Week</option>
+                        </select>
+                    </div>
 
-                <div className="form-group">
-                    <label>Image</label>
-                    {product.image && (
-                        <div>
-                            <img src={product.image} alt="Current" style={{ width: '100px', height: '100px', marginBottom: '10px' }} />
-                            <p>Current Image</p>
-                        </div>
-                    )}
-                    <ImageDropBox onImageUpdate={handleImageUpdate} />
-                </div>
+                    <div className="form-group">
+                        <label>Image</label>
+                        {product.image && (
+                            <div>
+                                <img src={product.image} alt="Current" style={{ width: '100px', height: '100px', marginBottom: '10px' }} />
+                                <p>Current Image</p>
+                            </div>
+                        )}
+                        <ImageDropBox onImageUpdate={handleImageUpdate} />
+                    </div>
 
-                <button type="submit">Update Product</button>
-            </form>
-            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
-        </div>
+                    <button type="submit">Update Product</button>
+                </form>
+                <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+            </div>
         </>
     );
 };
