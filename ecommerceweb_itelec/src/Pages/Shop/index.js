@@ -35,7 +35,6 @@ const SellerHeader = ({ seller_id }) => {
       .then((data) => {
         if (data.message) {
           setFetchError(data.message);
-          toast.error(data.message);
         } else {
           setUsername(data.username || "Shop Name Not Available");
           setAverageRating(data.average_rating || "No rating available");
@@ -158,7 +157,7 @@ const ProductListShop = ({ seller_id }) => {
           ))
         )}
       </div>
-      <ToastContainer /> {/* Toast container to render error messages */}
+      <ToastContainer /> 
     </div>
   );
 };
@@ -170,7 +169,7 @@ const Shop = () => {
   const [seller_id, setSellerId] = useState(null);
 
   useEffect(() => {
-    // Extract the seller_id from the query string
+
     const params = new URLSearchParams(location.search);
     const sellerIdFromQuery = params.get("seller_id");
     setSellerId(sellerIdFromQuery);
@@ -194,8 +193,8 @@ const Shop = () => {
   );
 };
 
-// Default export for Shop component
+
 export default Shop; 
 
-// Named exports for the other components (optional)
+
 export { SellerHeader, ProductListShop };

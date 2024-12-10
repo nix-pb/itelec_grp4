@@ -37,6 +37,7 @@ function Cartlist() {
         const data = await response.json();
         setProducts(data);
       } catch (error) {
+        toast.error(error.message || 'Failed to fetch products.');
       }
     };
 
@@ -105,7 +106,6 @@ function Cartlist() {
         toast.error("Failed to delete product: " + data.message);
         return;
       }
-
   
       setProducts((prevProducts) => prevProducts.filter((product) => product.product_id !== productId));
       closeModal();
@@ -115,9 +115,19 @@ function Cartlist() {
     }
   };
 
+  // Calculate the subtotal of selected products
   const subtotal = products
     .filter((product) => selectedProducts[product.product_id])
     .reduce((total, product) => total + product.price * product.quantity, 0);
+
+  // Shipping fee logic (similar to OrderForm)
+  const shippingFee = 50; // Fixed shipping fee
+  let totalCost = subtotal;
+
+  // Add shipping fee only if price is 600 or less
+  if (subtotal <= 600) {
+    totalCost += shippingFee;
+  }
 
   const proceedToCheckout = async () => {
     const selectedItems = products.filter((product) => selectedProducts[product.product_id]);
@@ -273,9 +283,20 @@ function Cartlist() {
               <span>Subtotal</span>
               <span>₱{subtotal.toFixed(2)}</span>
             </div>
+            {subtotal <= 600 ? (
+              <div className="summary-line">
+                <span>Shipping Fee</span>
+                <span>₱50</span>
+              </div>
+            ) : (
+              <div className="summary-line">
+                <span>Shipping Fee</span>
+                <span>Free Shipping</span>
+              </div>
+            )}
             <div className="summary-line">
               <span>Total</span>
-              <span>₱{subtotal.toFixed(2)}</span>
+              <span>₱{totalCost.toFixed(2)}</span>
             </div>
 
             {/* New Location Input */}
@@ -292,18 +313,16 @@ function Cartlist() {
             <button onClick={proceedToCheckout}>Proceed to Checkout</button>
           </div>
         </div>
-      </div>
 
-      {/* Confirmation Modal */}
-      <Confirmation
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={() => {
-          if (productToDelete) {
-            handleDeleteProduct(productToDelete);
-          }
-        }}
-      />
+        {/* Confirmation Modal */}
+        {isModalOpen && productToDelete && (
+          <Confirmation
+            productId={productToDelete}
+            closeModal={closeModal}
+            handleDeleteProduct={handleDeleteProduct}
+          />
+        )}
+      </div>
     </>
   );
 }

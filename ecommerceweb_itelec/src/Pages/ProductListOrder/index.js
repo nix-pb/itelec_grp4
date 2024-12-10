@@ -87,7 +87,8 @@ const ProductListOrder = ({ selectedCategory }) => {
                 </div>
               </div>
               <div className="product-info-order">
-                <p className="product-price-order">PHP {product.price}</p>
+              <p className="product-price-order">PHP {parseFloat(order.price) + 50}</p>
+              <p className="shipping-text">(shipping fee included )</p>
                 <button className="buy-again-button">Buy Again</button>
               </div>
             </div>

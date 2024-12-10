@@ -21,7 +21,6 @@ import Chat from './Pages/Chat';
 import OrderForm from './Pages/OrderForm';
 import OrdersList from './Pages/OrdersList';
 import Shop from './Pages/Shop';
-import Analytics from './Pages/AnalyticsDashboard';
 
 
 
@@ -49,7 +48,6 @@ function App() {
           <Route path="/OrderForm" element={<OrderForm />} />
           <Route path="/OrdersList" element={<OrdersList />} />
           <Route path="/shop" element={<Shop />} />
-          <Route path="/Analytics" element={<Analytics />} />
 
         </Routes>
       </BrowserRouter>

@@ -76,55 +76,65 @@ const ProductListInTransit = () => {
         {orders.length === 0 ? (
           <p>No pending orders found for this user.</p>
         ) : (
-          orders.map((order) => (
-            <div
-              key={order.id}
-              className="product-card-order"
-              onClick={() => (order.id)} 
-            >
-              <div className="product-image-wrapper-order">
-                {order.image ? (
-                  <img
-                    src={order.image}
-                    alt={order.name}
-                    className="product-image-order"
-                  />
-                ) : (
-                  <div className="placeholder-image-order">No Image Available</div>
-                )}
-              </div>
-              <div className="product-info-order">
-                <h3>{order.name}</h3>
-                <p className="product-status-order">Status: {order.status}</p>
-              </div>
-              <div className="product-info-order">
-                <p className="product-price-order">PHP {order.price}</p>
-                <p className="product-quantity-order">Quantity: {order.quantity}</p>
-                <p className="product-purchase-date-order">
-                  Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
-                </p>
-                <div className="product-actions">
-                  <button
-                    className="buy-again-button"
-                    onClick={(e) => handleBuyAgain(order.product_id, e)} 
-                  >
-                    Buy Again
-                  </button>
-                  {order.status === 'In Transit' && (
-                    <button
-                      className="received-button"
-                      onClick={(e) => {
-                        e.stopPropagation(); 
-                        handleMarkAsReceived(order.id);
-                      }}
-                    >
-                      Mark as Received
-                    </button>
+          orders.map((order) => {
+            // Calculate price with shipping fee if price is less than or equal to 600
+            const totalPrice = parseFloat(order.price) <= 600 ? parseFloat(order.price) + 50 : parseFloat(order.price);
+
+            return (
+              <div
+                key={order.id}
+                className="product-card-order"
+                onClick={() => (order.id)} 
+              >
+                <div className="product-image-wrapper-order">
+                  {order.image ? (
+                    <img
+                      src={order.image}
+                      alt={order.name}
+                      className="product-image-order"
+                    />
+                  ) : (
+                    <div className="placeholder-image-order">No Image Available</div>
                   )}
                 </div>
+                <div className="product-info-order">
+                  <h3>{order.name}</h3>
+                  <p className="product-status-order">Status: {order.status}</p>
+                </div>
+                <div className="product-info-order">
+                  {/* Display total price and shipping fee if applicable */}
+                  <p className="product-price-order">
+                    PHP {totalPrice}
+                    {parseFloat(order.price) <= 600 }
+                  </p>
+                  {parseFloat(order.price) <= 600 && <p className="shipping-text">(shipping fee included)</p>}
+                  <p className="product-quantity-order">Quantity: {order.quantity}</p>
+                  <p className="product-purchase-date-order">
+                    Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
+                  </p>
+                  <div className="product-actions">
+                    <button
+                      className="buy-again-button"
+                      onClick={(e) => handleBuyAgain(order.product_id, e)} 
+                    >
+                      Buy Again
+                    </button>
+                    {order.status === 'In Transit' && (
+                      <button
+                        className="received-button"
+                        onClick={(e) => {
+                          e.stopPropagation(); 
+                          handleMarkAsReceived(order.id);
+                        }}
+                      >
+                        Mark as Received
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

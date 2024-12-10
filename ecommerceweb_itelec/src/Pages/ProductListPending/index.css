@@ -140,3 +140,10 @@
   background-color: #8e0000; 
   box-shadow: none;
 }
+
+
+.shipping-text {
+  font-size: 0.8em;
+  color: #888; 
+  text-align: right;
+}

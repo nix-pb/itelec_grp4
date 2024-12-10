@@ -6,7 +6,7 @@ const ProductListReceived = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
-  const userId = localStorage.getItem('user_id'); // Ensure 'user_id' is properly stored in localStorage
+  const userId = localStorage.getItem('user_id');
 
   // Fetch orders from the API
   const fetchOrders = async () => {
@@ -56,48 +56,58 @@ const ProductListReceived = () => {
         {!error && orders.length === 0 ? (
           <p>No received orders found for this user.</p>
         ) : (
-          orders.map((order) => (
-            <div
-              key={order.id}
-              className="product-card-order"
-              onClick={() => handleProductClick(order.product_id)} // Navigate to product page
-            >
-              <div className="product-image-wrapper-order">
-                {order.image ? (
-                  <img
-                    src={order.image}
-                    alt={order.name}
-                    className="product-image-order"
-                  />
-                ) : (
-                  <div className="placeholder-image-order">No Image Available</div>
-                )}
-              </div>
-              <div className="product-info-order">
-                <h3>{order.name}</h3>
-                <p className="product-status-order">Status: {order.status}</p>
-              </div>
+          orders.map((order) => {
+            // Calculate price with shipping fee if price is less than or equal to 600
+            const totalPrice = parseFloat(order.price) <= 600 ? parseFloat(order.price) + 50 : parseFloat(order.price);
 
-              <div className="product-info-order">
-                <p className="product-price-order">PHP {order.price}</p>
-                <p className="product-quantity-order">Quantity: {order.quantity}</p>
-                <p className="product-purchase-date-order">
-                  Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
-                </p>
+            return (
+              <div
+                key={order.id}
+                className="product-card-order"
+                onClick={() => handleProductClick(order.product_id)} 
+              >
+                <div className="product-image-wrapper-order">
+                  {order.image ? (
+                    <img
+                      src={order.image}
+                      alt={order.name}
+                      className="product-image-order"
+                    />
+                  ) : (
+                    <div className="placeholder-image-order">No Image Available</div>
+                  )}
+                </div>
+                <div className="product-info-order">
+                  <h3>{order.name}</h3>
+                  <p className="product-status-order">Status: {order.status}</p>
+                </div>
 
-                <button
-                  className="buy-again-button"
-                  onClick={() => handleBuyAgain(order.product_id)} // Use product_id for Buy Again
-                >
-                  Buy Again
-                </button>
+                <div className="product-info-order">
+                  {/* Display total price and shipping fee if applicable */}
+                  <p className="product-price-order">
+                    PHP {totalPrice}
+                    {parseFloat(order.price) <= 600 }
+                  </p>
+                  {parseFloat(order.price) <= 600 && <p className="shipping-text">(shipping fee included)</p>}
+                  <p className="product-quantity-order">Quantity: {order.quantity}</p>
+                  <p className="product-purchase-date-order">
+                    Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
+                  </p>
+
+                  <button
+                    className="buy-again-button"
+                    onClick={() => handleBuyAgain(order.product_id)} 
+                  >
+                    Buy Again
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
   );
 };
 
-export default ProductListReceived;
+export default ProductListReceived

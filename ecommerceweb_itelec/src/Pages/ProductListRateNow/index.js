@@ -6,10 +6,10 @@ const ProductListRateNow = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
-  const [selectedOrderId, setSelectedOrderId] = useState(null); // Store selected order ID
-  const [selectedRating, setSelectedRating] = useState(0); // Store selected rating
-  const userId = localStorage.getItem('user_id'); // Ensure 'user_id' is properly stored in localStorage
+  const [showModal, setShowModal] = useState(false); 
+  const [selectedOrderId, setSelectedOrderId] = useState(null); 
+  const [selectedRating, setSelectedRating] = useState(0); 
+  const userId = localStorage.getItem('user_id'); 
 
   // Fetch orders from the API
   const fetchOrders = async () => {
@@ -53,14 +53,14 @@ const ProductListRateNow = () => {
 
   // Handle opening the rating modal
   const handleRateNowClick = (orderId, event) => {
-    event.stopPropagation(); // Prevent navigation when clicking "Rate Now"
+    event.stopPropagation(); 
     setSelectedOrderId(orderId);
     setShowModal(true);
   };
 
   // Handle star click event in the modal
   const handleStarClick = (star) => {
-    setSelectedRating(star); // Set the rating when a star is clicked
+    setSelectedRating(star); 
   };
 
   // Handle rating submission
@@ -114,7 +114,7 @@ const ProductListRateNow = () => {
         )
       );
   
-      setShowModal(false); // Close the modal after submission
+      setShowModal(false); 
     } catch (error) {
       console.error('Error:', error);
       alert(error.message);
@@ -135,74 +135,83 @@ const ProductListRateNow = () => {
         {!error && orders.length === 0 ? (
           <p>No products to rate for this user.</p>
         ) : (
-          orders.map((order) => (
-            <div
-              key={order.id}
-              className="product-card-order"
-              onClick={(e) => {
-                // Only navigate if it's not a "Rate Now" click
-                if (!showModal) {
-                  handleProductClick(order.product_id); // Navigate to product page
-                }
-              }} // Prevent navigation on "Rate Now" button click
-            >
-              <div className="product-image-wrapper-order">
-                {order.image ? (
-                  <img
-                    src={order.image}
-                    alt={order.name}
-                    className="product-image-order"
-                  />
-                ) : (
-                  <div className="placeholder-image-order">No Image Available</div>
-                )}
-              </div>
-              <div className="product-info-order">
-                <h3>{order.name}</h3>
+          orders.map((order) => {
+            // Calculate price with shipping fee if price is less than or equal to 600
+            const totalPrice = parseFloat(order.price) <= 600 ? parseFloat(order.price) + 50 : parseFloat(order.price);
 
-                {/* Rate Now button or Rating stars */}
-                {order.rating ? (
-                  <div className="rating-stars">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        className={`star ${order.rating >= star ? 'active' : ''}`}
-                        style={{
-                          color: order.rating >= star ? 'yellow' : 'gray',
-                          cursor: 'default', // Prevent cursor pointer since the stars are not clickable
-                        }}
-                      >
-                        ★
-                      </span>
-                    ))}
-                    <p>Rated: {order.rating} Stars</p>
-                  </div>
-                ) : (
+            return (
+              <div
+                key={order.id}
+                className="product-card-order"
+                onClick={(e) => {
+                  if (!showModal) {
+                    handleProductClick(order.product_id); 
+                  }
+                }} 
+              >
+                <div className="product-image-wrapper-order">
+                  {order.image ? (
+                    <img
+                      src={order.image}
+                      alt={order.name}
+                      className="product-image-order"
+                    />
+                  ) : (
+                    <div className="placeholder-image-order">No Image Available</div>
+                  )}
+                </div>
+                <div className="product-info-order">
+                  <h3>{order.name}</h3>
+
+                  {/* Rate Now button or Rating stars */}
+                  {order.rating ? (
+                    <div className="rating-stars">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`star ${order.rating >= star ? 'active' : ''}`}
+                          style={{
+                            color: order.rating >= star ? 'yellow' : 'gray',
+                            cursor: 'default', 
+                          }}
+                        >
+                          ★
+                        </span>
+                      ))}
+                      <p>Rated: {order.rating} Stars</p>
+                    </div>
+                  ) : (
+                    <button
+                      className="rate-now-button"
+                      onClick={(e) => handleRateNowClick(order.id, e)} 
+                    >
+                      Rate Now
+                    </button>
+                  )}
+                </div>
+
+                <div className="product-info-order">
+                  {/* Display total price and shipping fee if applicable */}
+                  <p className="product-price-order">
+                    PHP {totalPrice}
+                    {parseFloat(order.price) <= 600 }
+                  </p>
+                  {parseFloat(order.price) <= 600 && <p className="shipping-text">(shipping fee included)</p>}
+                  <p className="product-quantity-order">Quantity: {order.quantity}</p>
+                  <p className="product-purchase-date-order">
+                    Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
+                  </p>
+
                   <button
-                    className="rate-now-button"
-                    onClick={(e) => handleRateNowClick(order.id, e)} // Stop propagation on "Rate Now" button click
+                    className="buy-again-button"
+                    onClick={() => handleBuyAgain(order.product_id)} 
                   >
-                    Rate Now
+                    Buy Again
                   </button>
-                )}
+                </div>
               </div>
-
-              <div className="product-info-order">
-                <p className="product-price-order">PHP {order.price}</p>
-                <p className="product-quantity-order">Quantity: {order.quantity}</p>
-                <p className="product-purchase-date-order">
-                  Purchase Date: {new Date(order.purchase_date).toLocaleDateString()}
-                </p>
-
-                <button
-                  className="buy-again-button"
-                  onClick={() => handleBuyAgain(order.product_id)} // Use product_id for Buy Again
-                >
-                  Buy Again
-                </button>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
 

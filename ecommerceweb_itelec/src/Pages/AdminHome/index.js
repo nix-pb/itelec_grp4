@@ -101,8 +101,7 @@ const AdminHome = () => {
                         <thead>
                             <tr>
                                 <th>Product</th>
-                                <th>User</th>
-                                <th>Price</th>
+                                <th>To be Paid</th>
                                 <th>Quantity</th>
                                 <th>Booking Date</th>
                                 <th>Location</th>
@@ -114,8 +113,7 @@ const AdminHome = () => {
                             {currentOrders.map((order) => (
                                 <tr key={order.id}>
                                     <td>{order.name}</td>
-                                    <td>{order.user_id}</td>
-                                    <td>PHP {order.price}</td>
+                                    <td>PHP {parseFloat(order.price)}</td>
                                     <td>{order.quantity}</td>
                                     <td>{new Date(order.purchase_date).toLocaleDateString()}</td>
                                     <td>
