@@ -11,11 +11,12 @@ function Cartlist() {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState({});
   const [selectedDates, setSelectedDates] = useState({});
-  const [locationInput, setLocationInput] = useState(''); // Location input state
+  const [locationInput, setLocationInput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
 
-  // Get user ID from localStorage
+  const shippingFee = 50; // Fixed shipping fee
+
   const userId = localStorage.getItem('user_id');
 
   // Fetch products from the server
@@ -37,7 +38,8 @@ function Cartlist() {
         const data = await response.json();
         setProducts(data);
       } catch (error) {
-        toast.error(error.message || 'Failed to fetch products.');
+        console.error(error);
+        toast.error('Failed to fetch products.');
       }
     };
 
@@ -75,38 +77,34 @@ function Cartlist() {
   };
 
   const handleLocationChange = (e) => {
-    setLocationInput(e.target.value); // Update location state
+    setLocationInput(e.target.value);
   };
 
-  // Open delete modal for a cart item
   const openDeleteModal = (id) => {
     setProductToDelete(id);
     setIsModalOpen(true);
   };
 
-  // Close delete modal
   const closeModal = () => {
     setIsModalOpen(false);
     setProductToDelete(null);
   };
 
-  // Handle deletion of a cart item
   const handleDeleteProduct = async (productId) => {
-    console.log('Deleting product with ID:', productId, 'User ID:', userId); // Log the values to check
     try {
       const response = await fetch('http://localhost:5001/api/cartlistremove', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: userId, product_id: productId }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         toast.error("Failed to delete product: " + data.message);
         return;
       }
-  
+
       setProducts((prevProducts) => prevProducts.filter((product) => product.product_id !== productId));
       closeModal();
     } catch (error) {
@@ -115,36 +113,39 @@ function Cartlist() {
     }
   };
 
-  // Calculate the subtotal of selected products
+  // Calculate subtotal including shipping fee logic
   const subtotal = products
     .filter((product) => selectedProducts[product.product_id])
-    .reduce((total, product) => total + product.price * product.quantity, 0);
-
-  // Shipping fee logic (similar to OrderForm)
-  const shippingFee = 50; // Fixed shipping fee
-  let totalCost = subtotal;
-
-  // Add shipping fee only if price is 600 or less
-  if (subtotal <= 600) {
-    totalCost += shippingFee;
-  }
+    .reduce((total, product) => {
+      const price = product.price;
+      const totalPrice = price * product.quantity;
+      const fee = price <= 600 ? shippingFee : 0;  // Only add shipping fee if price <= 600
+      return total + totalPrice + fee;
+    }, 0);
 
   const proceedToCheckout = async () => {
     const selectedItems = products.filter((product) => selectedProducts[product.product_id]);
-  
+    
     if (selectedItems.length === 0) {
       toast.error('No products selected for checkout.');
       return;
     }
-  
+
     if (!locationInput) {
       toast.error('Please provide a delivery address.');
       return;
     }
-  
+
+    for (let product of selectedItems) {
+      if (!selectedDates[product.product_id]) {
+        toast.error(`Please select a date for ${product.name}.`);
+        return;
+      }
+    }
+
     const orderData = selectedItems.map((product) => {
       const purchaseDate = selectedDates[product.product_id] || new Date().toISOString().slice(0, 19).replace('T', ' ');
-  
+
       return {
         user_id: userId,
         product_id: product.product_id,
@@ -158,9 +159,7 @@ function Cartlist() {
         location: locationInput,
       };
     });
-  
-    console.log('Order data being sent:', orderData);
-  
+
     try {
       const response = await fetch('http://localhost:5001/api/buy', {
         method: 'POST',
@@ -169,13 +168,13 @@ function Cartlist() {
         },
         body: JSON.stringify(orderData),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.message || 'Failed to place order');
       }
-  
+
       toast.success('Order placed successfully!');
       setTimeout(() => navigate('/Orders'), 1500);
     } catch (error) {
@@ -195,20 +194,12 @@ function Cartlist() {
           <div className="cart-products">
             {products.length === 0 && <p>No products found in the cart.</p>}
             {products.map((product) => (
-              <div
-                className="product-item"
-                key={product.product_id} // Use product.product_id
-                onClick={(e) => {
-                  if (!e.target.closest('.date-picker') && !e.target.closest('.checkbox-column')) {
-                    handleProductClick(product.product_id); // Use product.product_id
-                  }
-                }}
-              >
+              <div className="product-item" key={product.product_id}>
                 <div className="checkbox-column">
                   <input
                     type="checkbox"
-                    checked={!!selectedProducts[product.product_id]} // Use product.product_id
-                    onChange={() => handleCheckboxChange(product.product_id)} // Use product.product_id
+                    checked={!!selectedProducts[product.product_id]}
+                    onChange={() => handleCheckboxChange(product.product_id)}
                   />
                   <label htmlFor={`checkbox-${product.product_id}`} className="custom-checkbox"></label>
                 </div>
@@ -234,7 +225,7 @@ function Cartlist() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleQuantityChange(product.product_id, -1); // Use product.product_id
+                      handleQuantityChange(product.product_id, -1);
                     }}
                     className="quantity-button"
                     disabled={product.quantity === 0}
@@ -245,7 +236,7 @@ function Cartlist() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleQuantityChange(product.product_id, 1); // Use product.product_id
+                      handleQuantityChange(product.product_id, 1);
                     }}
                     className="quantity-button"
                   >
@@ -259,20 +250,20 @@ function Cartlist() {
                     type="date"
                     id={`date-picker-${product.product_id}`}
                     value={selectedDates[product.product_id] || ''}
-                    onChange={(e) => handleDateChange(product.product_id, e.target.value)} // Use product.product_id
+                    onChange={(e) => handleDateChange(product.product_id, e.target.value)}
+                    required
                   />
                 </div>
 
                 <button
                   className="remove-button"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering other click handlers
-                    openDeleteModal(product.product_id); // Use product.product_id
+                    e.stopPropagation();
+                    openDeleteModal(product.product_id);
                   }}
                 >
                   Remove
                 </button>
-
               </div>
             ))}
           </div>
@@ -283,10 +274,12 @@ function Cartlist() {
               <span>Subtotal</span>
               <span>₱{subtotal.toFixed(2)}</span>
             </div>
+
+            {/* Display Shipping Fee */}
             {subtotal <= 600 ? (
               <div className="summary-line">
                 <span>Shipping Fee</span>
-                <span>₱50</span>
+                <span>₱{shippingFee}</span>
               </div>
             ) : (
               <div className="summary-line">
@@ -294,12 +287,12 @@ function Cartlist() {
                 <span>Free Shipping</span>
               </div>
             )}
+
             <div className="summary-line">
               <span>Total</span>
-              <span>₱{totalCost.toFixed(2)}</span>
+              <span>₱{(subtotal + (subtotal <= 600 ? shippingFee : 0)).toFixed(2)}</span>
             </div>
 
-            {/* New Location Input */}
             <label htmlFor="locationInput">Delivery Address:</label>
             <input
               type="text"
@@ -312,17 +305,19 @@ function Cartlist() {
 
             <button onClick={proceedToCheckout}>Proceed to Checkout</button>
           </div>
-        </div>
 
-        {/* Confirmation Modal */}
-        {isModalOpen && productToDelete && (
-          <Confirmation
-            productId={productToDelete}
-            closeModal={closeModal}
-            handleDeleteProduct={handleDeleteProduct}
-          />
-        )}
+        </div>
       </div>
+
+      <Confirmation
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onConfirm={() => {
+          if (productToDelete) {
+            handleDeleteProduct(productToDelete);
+          }
+        }}
+      />
     </>
   );
 }

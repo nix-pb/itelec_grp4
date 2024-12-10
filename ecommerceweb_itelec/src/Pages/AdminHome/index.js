@@ -14,7 +14,7 @@ const AdminHome = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);  // Track current page
-    const [ordersPerPage] = useState(15); // Orders per page
+    const [ordersPerPage] = useState(10); // Orders per page
     const [modalLocation, setModalLocation] = useState(null); // State to store location for modal
 
     // Fetch orders for the logged-in user

@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* Light grey background */
 }
 
 h1 {
@@ -15,7 +15,7 @@ h1 {
   max-width: 600px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: #fff; /* White background */
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -54,7 +54,7 @@ h1 {
 }
 
 .add-product-button {
-  background-color: #007bff;
+  background-color: #007bff; /* Blue button color */
   color: #ffffff;
   border: none;
   border-radius: 5px;
@@ -81,34 +81,30 @@ h1 {
   margin: 20px 0;
 }
 
-
-
-
 .orders-container {
   margin: 20px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #facc93; /* Light grey background */
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.orders-container h1 {
-  text-align: center;
-  font-size: 24px;
+.orders-container h2 {
   color: #333;
-  margin-bottom: 20px;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate; /* Change to separate to allow border radius */
+  border-spacing: 0; /* Remove spacing between cells */
   margin: 20px 0;
   font-size: 16px;
   text-align: left;
+  background-color: #fff; /* White background for the table */
 }
 
 thead {
-  background-color: #4CAF50;
+  background-color: #ff8c00; /* Orange header */
   color: white;
 }
 
@@ -118,17 +114,26 @@ thead th {
 }
 
 tbody tr {
-  border-bottom: 1px solid #ddd;
-  transition: background-color 0.2s ease-in-out;
+  border-radius: 8px; /* Add rounded corners for the row */
+  overflow: hidden; /* Ensure content stays within rounded corners */
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f2f2f2; /* Light grey for odd rows */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff; /* White for even rows */
 }
 
 tbody tr:hover {
-  background-color: #f1f1f1;
+  background-color: #ffe8d1; /* Light orange hover effect */
 }
 
 tbody td {
   padding: 12px;
   vertical-align: middle;
+  border: 1px solid #ddd; /* Optional: border for each cell */
 }
 
 tbody td img {
@@ -154,74 +159,52 @@ td {
   margin: 20px;
 }
 
-/* Orders Table Styling */
-.orders-container {
-    margin: 20px;
-    padding: 10px;
-    background-color: #dce3fa;
-}
-
-.orders-container table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;  /* Rounded corners for the table */
-    overflow: hidden;
-}
-
-.orders-container th, .orders-container td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #918585;
-}
-
-.orders-container th {
-    background-color: #9eb2f5;
-    color: #333;
-}
-
-.orders-container tr:hover {
-    background-color: #f9f9f9;
-}
-
 /* Button Styling */
 .status-button {
-    background-color: #ff8c00;  /* Orange color */
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 25px;  /* More rounded corners */
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
+  background-color: #faac4d; /* Orange color */
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
 }
 
 .status-button:hover {
-    background-color: #e07b00;  /* Darker orange on hover */
+  background-color: #e07b00; /* Darker orange on hover */
+  transform: scale(1.05);
 }
 
-.status-button:active {
-    background-color: #cc6e00;  /* Even darker orange when clicked */
+.status-button:focus {
+  outline: none;
 }
 
-/* Optional: Add some space between the table and buttons */
+.status-button:disabled {
+  background-color: #d6d6d6;
+  color: #a5a5a5;
+  cursor: not-allowed;
+}
+
 .button-container {
-    margin-top: 20px;
-    text-align: center;
+  margin-top: 20px;
+  text-align: center;
 }
 
 .add-product-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .add-product-button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 /* Pagination styles */
@@ -233,33 +216,32 @@ td {
 
 .pagination button {
   width: 10%;
-  padding: 8px 12px; /* Reduced width */
+  padding: 8px 12px;
   margin: 0 5px;
   cursor: pointer;
-  background-color: orange; /* Set background to orange */
-  border: 1px solid orange; /* Border to match button color */
-  border-radius: 15px; /* Rounded corners */
-  color: white; /* Text color white */
+  background-color: #ff8c00; /* Orange background */
+  border: 1px solid #ff8c00; /* Border matching button color */
+  border-radius: 15px;
+  color: white;
   font-weight: bold;
-  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition for hover effect */
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .pagination button:hover {
-  background-color: #ff8c00; /* Darker orange on hover */
-  border-color: #ff8c00; /* Darker border color on hover */
+  background-color: #e07b00; /* Darker orange on hover */
+  border-color: #e07b00; /* Darker border on hover */
 }
 
 .pagination button.active {
   background-color: #a06318; /* Active button color */
-  border-color: #ff8c00; /* Active button border */
+  border-color: #ff8c00;
 }
 
 .pagination button:disabled {
   cursor: not-allowed;
-  background-color: #756b6b; /* Light gray background when disabled */
-  border-color: #ccc; /* Light gray border when disabled */
+  background-color: #d3d3d3; /* Disabled button with light grey */
+  border-color: #ccc;
 }
-
 
 /* Modal styles */
 .modal {
@@ -296,29 +278,53 @@ td {
   background-color: #0056b3;
 }
 
-
 /* Style for the Seller Dashboard heading */
 .seller-dashboard-heading {
-  font-size: 3rem; /* Large font size for prominence */
-  font-weight: 800; /* Very bold text */
-  color: #333; /* Dark text color for contrast */
-  padding: 15px 20px; /* Add padding for spacing around the text */
-  margin-top: 20px; /* Space above */
-  margin-bottom: 20px; /* Space below */
-  text-align: center; /* Center align */
-  font-family: 'Montserrat', sans-serif; /* Modern sans-serif font */
-  letter-spacing: 1.5px; /* Slightly increase letter-spacing for elegance */
-  text-transform: uppercase; /* Uppercase text for a professional look */
-  
-  /* Adding depth to the text */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0px 0px 25px rgba(0, 0, 0, 0.1); /* Depth effect for text */
+  font-size: 3rem;
+  font-weight: 800;
+  color: #333;
+  padding: 15px 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0px 0px 25px rgba(0, 0, 0, 0.1);
 }
-
 
 /* Responsive styling for smaller screens */
 @media (max-width: 768px) {
   .seller-dashboard-heading {
-      font-size: 2.5rem; /* Slightly smaller font size on mobile */
-      padding: 12px 18px; /* Adjust padding for smaller screens */
+      font-size: 2.5rem;
+      padding: 12px 18px;
   }
+}
+
+/* View Location Button */
+.view-location-button {
+  background-color: #54a6ff; /* Blue button color */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center;
+}
+
+.view-location-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: scale(1.05);
+}
+
+.view-location-button:focus {
+  outline: none;
+}
+
+.view-location-button:disabled {
+  background-color: #d6d6d6;
+  color: #a5a5a5;
+  cursor: not-allowed;
 }

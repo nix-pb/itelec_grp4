@@ -15,7 +15,9 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 
-app.use(express.json());
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+
 
 app.use(cors()); 
 app.use(bodyParser.json()); 
@@ -1298,7 +1300,6 @@ app.get('/api/cartlistfetch', (req, res) => {
 });
 
 
-// Endpoint to place orders
 app.post('/api/buy', (req, res) => {
   const orders = req.body; // This is an array of order data
 
@@ -1310,7 +1311,6 @@ app.post('/api/buy', (req, res) => {
   for (const order of orders) {
     const { user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location } = order;
 
-    // Create an array to track missing fields for each order
     const missingFields = [];
 
     if (!user_id) missingFields.push('user_id');
@@ -1323,7 +1323,6 @@ app.post('/api/buy', (req, res) => {
     if (!seller_id) missingFields.push('seller_id');
     if (!location) missingFields.push('location');
 
-    // If there are any missing fields, send a specific error message
     if (missingFields.length > 0) {
       return res.status(400).json({
         message: `Missing required fields: ${missingFields.join(', ')} in the order data.`,
@@ -1331,7 +1330,6 @@ app.post('/api/buy', (req, res) => {
     }
   }
 
-  // Insert each order into the database, including the 'Pending' status
   const sql = `
     INSERT INTO orders (user_id, product_id, name, price, quantity, purchase_date, image, seller_id, location, status)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -1351,7 +1349,7 @@ app.post('/api/buy', (req, res) => {
           order.image,
           order.seller_id,
           order.location,
-          'Pending', 
+          'Pending',
         ],
         (err, results) => {
           if (err) {
@@ -1365,7 +1363,6 @@ app.post('/api/buy', (req, res) => {
     })
   );
 
-  // Wait for all order promises to resolve
   Promise.all(orderPromises)
     .then((orderIds) => {
       res.status(200).json({ message: 'Order(s) placed successfully!', orderIds });
